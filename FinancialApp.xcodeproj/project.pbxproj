@@ -6,13 +6,51 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8C1A57372EA4BCB5009FA8FE /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57362EA4BCB5009FA8FE /* Auth */; };
+		8C1A57392EA4BCB5009FA8FE /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57382EA4BCB5009FA8FE /* Functions */; };
+		8C1A573B2EA4BCB5009FA8FE /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A573A2EA4BCB5009FA8FE /* PostgREST */; };
+		8C1A573D2EA4BCB5009FA8FE /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A573C2EA4BCB5009FA8FE /* Realtime */; };
+		8C1A573F2EA4BCB5009FA8FE /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A573E2EA4BCB5009FA8FE /* Storage */; };
+		8C1A57552EA4C05C009FA8FE /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57542EA4C05C009FA8FE /* Supabase */; };
+		8C1A57652EA4CC35009FA8FE /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57642EA4CC35009FA8FE /* Dependencies */; };
+		8C1A57672EA4CC35009FA8FE /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57662EA4CC35009FA8FE /* DependenciesMacros */; };
+		8C1A576A2EA4CC50009FA8FE /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57692EA4CC50009FA8FE /* GoogleSignIn */; };
+		8C1A576C2EA4CC50009FA8FE /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A576B2EA4CC50009FA8FE /* GoogleSignInSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		8C1A57272EA4B89E009FA8FE /* FinancialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinancialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8C1A576E2EA4D584009FA8FE /* Exceptions for "FinancialApp" folder in "FinancialApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				"Utilities/Extensions/URLCache+Extensions.swift",
+			);
+			target = 8C1A57262EA4B89E009FA8FE /* FinancialApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		8C1A57F02EA4FB0B009FA8FE /* Exceptions for "FinancialApp" folder in "Copy Bundle Resources" phase from "FinancialApp" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 8C1A57252EA4B89E009FA8FE /* Resources */;
+			membershipExceptions = (
+				"Utilities/Extensions/URLCache+Extensions.swift",
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8C1A57292EA4B89E009FA8FE /* FinancialApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8C1A576E2EA4D584009FA8FE /* Exceptions for "FinancialApp" folder in "FinancialApp" target */,
+				8C1A57F02EA4FB0B009FA8FE /* Exceptions for "FinancialApp" folder in "Copy Bundle Resources" phase from "FinancialApp" target */,
+			);
 			path = FinancialApp;
 			sourceTree = "<group>";
 		};
@@ -23,6 +61,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C1A57552EA4C05C009FA8FE /* Supabase in Frameworks */,
+				8C1A573B2EA4BCB5009FA8FE /* PostgREST in Frameworks */,
+				8C1A57652EA4CC35009FA8FE /* Dependencies in Frameworks */,
+				8C1A57392EA4BCB5009FA8FE /* Functions in Frameworks */,
+				8C1A576A2EA4CC50009FA8FE /* GoogleSignIn in Frameworks */,
+				8C1A57672EA4CC35009FA8FE /* DependenciesMacros in Frameworks */,
+				8C1A57372EA4BCB5009FA8FE /* Auth in Frameworks */,
+				8C1A573F2EA4BCB5009FA8FE /* Storage in Frameworks */,
+				8C1A573D2EA4BCB5009FA8FE /* Realtime in Frameworks */,
+				8C1A576C2EA4CC50009FA8FE /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				8C1A57292EA4B89E009FA8FE /* FinancialApp */,
+				8C1A57532EA4C05C009FA8FE /* Frameworks */,
 				8C1A57282EA4B89E009FA8FE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +92,13 @@
 				8C1A57272EA4B89E009FA8FE /* FinancialApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8C1A57532EA4C05C009FA8FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +121,16 @@
 			);
 			name = FinancialApp;
 			packageProductDependencies = (
+				8C1A57362EA4BCB5009FA8FE /* Auth */,
+				8C1A57382EA4BCB5009FA8FE /* Functions */,
+				8C1A573A2EA4BCB5009FA8FE /* PostgREST */,
+				8C1A573C2EA4BCB5009FA8FE /* Realtime */,
+				8C1A573E2EA4BCB5009FA8FE /* Storage */,
+				8C1A57542EA4C05C009FA8FE /* Supabase */,
+				8C1A57642EA4CC35009FA8FE /* Dependencies */,
+				8C1A57662EA4CC35009FA8FE /* DependenciesMacros */,
+				8C1A57692EA4CC50009FA8FE /* GoogleSignIn */,
+				8C1A576B2EA4CC50009FA8FE /* GoogleSignInSwift */,
 			);
 			productName = FinancialApp;
 			productReference = 8C1A57272EA4B89E009FA8FE /* FinancialApp.app */;
@@ -94,6 +160,11 @@
 			);
 			mainGroup = 8C1A571E2EA4B89E009FA8FE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				8C1A57632EA4CC35009FA8FE /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				8C1A57682EA4CC50009FA8FE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8C1A57282EA4B89E009FA8FE /* Products */;
 			projectDirPath = "";
@@ -254,6 +325,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FinancialApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -276,10 +348,10 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
@@ -298,6 +370,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FinancialApp/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -320,10 +393,10 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
@@ -351,6 +424,86 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		8C1A57632EA4CC35009FA8FE /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.0;
+			};
+		};
+		8C1A57682EA4CC50009FA8FE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8C1A57362EA4BCB5009FA8FE /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		8C1A57382EA4BCB5009FA8FE /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		8C1A573A2EA4BCB5009FA8FE /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		8C1A573C2EA4BCB5009FA8FE /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		8C1A573E2EA4BCB5009FA8FE /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		8C1A57542EA4C05C009FA8FE /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		8C1A57642EA4CC35009FA8FE /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57632EA4CC35009FA8FE /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		8C1A57662EA4CC35009FA8FE /* DependenciesMacros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57632EA4CC35009FA8FE /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = DependenciesMacros;
+		};
+		8C1A57692EA4CC50009FA8FE /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57682EA4CC50009FA8FE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		8C1A576B2EA4CC50009FA8FE /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1A57682EA4CC50009FA8FE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8C1A571F2EA4B89E009FA8FE /* Project object */;
 }

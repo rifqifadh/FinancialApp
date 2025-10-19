@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import GoogleSignIn
 
 @main
 struct FinancialAppApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+  var body: some Scene {
+    WindowGroup {
+      RootView()
+        .onOpenURL { url in
+          GIDSignIn.sharedInstance.handle(url)
         }
     }
+  }
 }
