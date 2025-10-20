@@ -9,22 +9,31 @@
 import Supabase
 import Foundation
 
+struct SupabaseEnv {
+    static var url: URL {
+        guard let url = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL") as? String else {
+            fatalError("SUPABASE_URL not found in Info.plist")
+        }
+        return URL(string: url)!
+    }
+    
+    static var apiKey: String {
+        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_API_KEY") as? String else {
+            fatalError("SUPABASE_API_KEY not found in Info.plist")
+        }
+        return apiKey
+    }
+}
+
 class  SupabaseManager {
   nonisolated(unsafe) static let shared = SupabaseManager()
   
   let client: SupabaseClient
   
   private init() {
-    // TODO: Replace with your actual values
-    
-    guard let supabaseURL = URL(string: ""),
-          let supabaseKey = "" as String? else {
-      fatalError("Missing Supabase configuration")
-    }
-    
     client = SupabaseClient(
-      supabaseURL: supabaseURL,
-      supabaseKey: supabaseKey
+      supabaseURL: SupabaseEnv.url,
+      supabaseKey: SupabaseEnv.apiKey
     )
   }
 }

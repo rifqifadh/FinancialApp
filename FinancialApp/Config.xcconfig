@@ -1,0 +1,5 @@
+// Configuration file for environment variables
+// Usage: Set these variables in your build configuration
+
+SUPABASE_URL = https:/$()/zrisrnntmtbjduflcqco.supabase.co
+SUPABASE_API_KEY = sb_publishable_x8y8dO5MNM-WSuWeglQtug_tFYVnPAm

@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Allow this app to access microphone</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>Allow this app to access photo library</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Allow this app to access gallery</string>
+  <key>NSCameraUsageDescription</key>
+  <string>Allow this app to open camera</string>
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>com.googleusercontent.apps.114327971145-jo6ma4ravd0boih1lbk5eh0emnbufmns</string>
+      </array>
+    </dict>
+  </array>
+  <key>GIDClientID</key>
+  <string>114327971145-jo6ma4ravd0boih1lbk5eh0emnbufmns.apps.googleusercontent.com</string>
+  <key>SUPABASE_URL</key>
+  <string>$(SUPABASE_URL)</string>
+  <key>SUPABASE_API_KEY</key>
+  <string>$(SUPABASE_API_KEY)</string>
+</dict>
 </plist>

@@ -1,12 +1,13 @@
 //
-//  ExpenseCategory.swift
+//  TransactionCategory.swift
 //  FinancialApp
 //
-//  Created by Rifqi on 19/10/25.
+//  Created by Rifqi Fadhlillah on 20/10/25.
 //
 
+import Foundation
 
-struct ExpenseCategoryResponse: Codable, Hashable {
+struct TransactionCategory: Codable, Hashable {
   let id: Int
   let iconName: String
   let name: String

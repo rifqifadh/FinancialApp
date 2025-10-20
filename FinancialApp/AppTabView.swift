@@ -23,10 +23,10 @@ struct AppTabView: View {
   
   var body: some View {
       TabView {
-//        ExpensesView(viewModel: viewModel)
-//          .tabItem {
-//            Label("Expenses", systemImage: "dollarsign.circle")
-//          }
+        TransactionView()
+          .tabItem {
+            Label("Expenses", systemImage: "dollarsign.circle")
+          }
         
 //        ChatRoomView(viewModel: chatViewModel)
 //          .tabItem {
@@ -34,6 +34,7 @@ struct AppTabView: View {
 //          }
         
         NavigationView {
+          Text("LKJLKJLKJ")
 //          InvestmentsView(viewModel: investmentsViewModel)
         }
         .tabItem {

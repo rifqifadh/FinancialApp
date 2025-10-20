@@ -9,7 +9,7 @@ import Observation
 import Supabase
 
 
-enum AuthState {
+enum AuthState: String {
     case loading
     case authenticated
     case unauthenticated
