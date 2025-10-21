@@ -99,11 +99,16 @@ final class TransactionsViewModel {
 
   // MARK: - Methods
   func selectMonth(_ monthOffset: Int) {
-    selectedMonth = Calendar.current.date(
+    
+    let selectedMonth = Calendar.current.date(
       byAdding: .month,
       value: monthOffset,
       to: Date()
     ) ?? Date()
+    self.selectedMonth = selectedMonth
+    Task {
+      await loadTransactions(month: selectedMonth)
+    }
   }
 
   func selectType(_ type: TransactionType?) {
@@ -126,9 +131,9 @@ final class TransactionsViewModel {
   }
 
   // MARK: - Data Loading
-  func loadTransactions() async {
+  func loadTransactions(month: Date? = nil) async {
     do {
-      let result = try await transactionService.fetchAll()
+      let result = try await transactionService.fetchAll(.init(month: selectedMonth))
       transactions = result.data
     } catch {
       print(error.localizedDescription)

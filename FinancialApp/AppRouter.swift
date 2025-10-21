@@ -19,6 +19,8 @@ enum AppRouter: Equatable, Hashable {
 	case viewTwo
 	case investments
 	case investmentDetail(id: String)
+//  case accounts
+//  case accountDetail(id: String)
   case login
   case appTab
 }

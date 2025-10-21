@@ -7,17 +7,22 @@
 
 import Dependencies
 import Supabase
+import Foundation
+
+struct TransactionParams: Encodable, Sendable {
+  let month: Date
+}
 
 struct TransactionService: Sendable {
 //  var deleteById: @Sendable (_ id: String) async throws -> Void
-  var fetchAll: @Sendable () async throws -> TransactionResponse
+  var fetchAll: @Sendable (_ params: TransactionParams) async throws -> TransactionResponse
 }
 
 extension TransactionService: DependencyKey {
   static let liveValue = TransactionService(
-    fetchAll: {
+    fetchAll: { params in
       do {
-        let result: TransactionResponse = try await SupabaseManager.shared.client.rpc("get_transactions").execute().value
+        let result: TransactionResponse = try await SupabaseManager.shared.client.rpc("get_transactions", params: ["params": params]).execute().value
         return result
       } catch {
         throw error

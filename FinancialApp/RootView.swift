@@ -29,6 +29,8 @@ struct RootView: View {
   var body: some View {
     Group {
       NavigationStack(path: $appNavigation.path) {
+        AppTabView()
+          .navigationBarBackButtonHidden()
         LoadingView()
           .navigationDestination(for: AppRouter.self) { destination in
             switch destination {
@@ -42,6 +44,10 @@ struct RootView: View {
             case .investmentDetail(let id):
               Text("Investment Detail View for ID: \(id)")
               //                            InvestmentDetailView(id: id)
+//            case .accounts:
+//              Text("Account List View")
+//            case .accountDetail(let id):
+//              Text("Account Detail View for ID: \(id)")
             case .login:
               LoginView()
                 .navigationBarBackButtonHidden()
@@ -53,15 +59,14 @@ struct RootView: View {
         
       }
       .onChange(of: authStore.authState) { oldValue, newValue in
-        if newValue == .authenticated {
+        if oldValue == .loading && newValue == .authenticated {
           //                    appNavigation.push(.appTab)
           appNavigation.path = [.appTab]
-        } else if newValue == .unauthenticated {
+        } else if oldValue == .loading && newValue == .unauthenticated {
           //                    appNavigation.push(.login)cha
           appNavigation.path = [.login]
         }
       }
-      
       .navigationViewStyle(StackNavigationViewStyle())
     }
     

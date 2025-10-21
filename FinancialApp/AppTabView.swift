@@ -27,12 +27,17 @@ struct AppTabView: View {
           .tabItem {
             Label("Expenses", systemImage: "dollarsign.circle")
           }
-        
+
+        AccountsView()
+          .tabItem {
+            Label("Accounts", systemImage: "wallet.pass")
+          }
+
 //        ChatRoomView(viewModel: chatViewModel)
 //          .tabItem {
 //            Label("Chat", systemImage: "message")
 //          }
-        
+
         NavigationView {
           Text("LKJLKJLKJ")
 //          InvestmentsView(viewModel: investmentsViewModel)
@@ -40,7 +45,7 @@ struct AppTabView: View {
         .tabItem {
           Label("Porto", systemImage: "chart.line.uptrend.xyaxis")
         }
-        
+
         SettingsView()
           .tabItem {
             Label("Settings", systemImage: "gear")
