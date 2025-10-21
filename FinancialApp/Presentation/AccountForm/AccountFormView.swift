@@ -7,55 +7,22 @@
 
 import SwiftUI
 
-// MARK: - Add Account Mode
-enum AddAccountMode: Equatable {
-  case add
-  case edit(AccountModel)
-
-  var title: String {
-    switch self {
-    case .add:
-      return "Add Account"
-    case .edit:
-      return "Edit Account"
-    }
-  }
-
-  var saveButtonTitle: String {
-    switch self {
-    case .add:
-      return "Add Account"
-    case .edit:
-      return "Save Changes"
-    }
-  }
-
-  var account: AccountModel? {
-    switch self {
-    case .add:
-      return nil
-    case .edit(let account):
-      return account
-    }
-  }
-}
-
-struct AddAccountView: View {
+struct AccountFormView: View {
   @Environment(\.dismiss) private var dismiss
-  @State private var viewModel: AddAccountViewModel
-  let mode: AddAccountMode
+  @State private var viewModel: AccountFormViewModel
+  let mode: AccountFormMode
   let onSave: (() -> Void)?
 
-  init(mode: AddAccountMode = .add, onSave: (() -> Void)? = nil) {
+  init(mode: AccountFormMode = .add, onSave: (() -> Void)? = nil) {
     self.mode = mode
     self.onSave = onSave
 
     // Initialize view model based on mode
     switch mode {
     case .add:
-      _viewModel = State(initialValue: AddAccountViewModel())
+      _viewModel = State(initialValue: AccountFormViewModel())
     case .edit(let account):
-      _viewModel = State(initialValue: AddAccountViewModel(account: account))
+      _viewModel = State(initialValue: AccountFormViewModel(account: account))
     }
   }
 
@@ -97,7 +64,7 @@ struct AddAccountView: View {
 
           // Account Number (Optional)
           VStack(alignment: .leading, spacing: 8) {
-            Text("Account Number (Optional)")
+            Text("Account Number")
               .font(AppTheme.Typography.caption)
               .foregroundStyle(AppTheme.Colors.secondaryText)
 
@@ -220,9 +187,9 @@ struct AddAccountView: View {
 }
 
 #Preview("Add Account") {
-  AddAccountView(mode: .add)
+  AccountFormView(mode: .add)
 }
 
 #Preview("Edit Account") {
-  AddAccountView(mode: .edit(.mockBank))
+  AccountFormView(mode: .edit(.mockBank))
 }

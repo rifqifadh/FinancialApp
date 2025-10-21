@@ -17,9 +17,6 @@ import SwiftUI
 
 struct AppTabView: View {
   @Environment(AppNavigation.self) var appNavigation
-//  @State private var viewModel = ExpensesViewModel()
-//  @State private var chatViewModel = ChatRoomViewModel()
-//  @State private var investmentsViewModel = InvestmentsViewModel()
   
   var body: some View {
       TabView {
@@ -46,9 +43,9 @@ struct AppTabView: View {
           Label("Porto", systemImage: "chart.line.uptrend.xyaxis")
         }
 
-        SettingsView()
+        ProfileView()
           .tabItem {
-            Label("Settings", systemImage: "gear")
+            Label("Profile", systemImage: "gear")
           }
       }
   }

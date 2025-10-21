@@ -1,3 +1,12 @@
+//
+//  AccountFormMode.swift
+//  FinancialApp
+//
+//  Created by Rifqi Fadhlillah on 21/10/25.
+//
+
+import Foundation
+
 // MARK: - Add Account Mode
 enum AccountFormMode: Equatable {
   case add

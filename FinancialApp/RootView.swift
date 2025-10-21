@@ -29,8 +29,6 @@ struct RootView: View {
   var body: some View {
     Group {
       NavigationStack(path: $appNavigation.path) {
-        AppTabView()
-          .navigationBarBackButtonHidden()
         LoadingView()
           .navigationDestination(for: AppRouter.self) { destination in
             switch destination {
@@ -43,11 +41,6 @@ struct RootView: View {
               //                            InvestmentListView(investments: Investment.mockData)
             case .investmentDetail(let id):
               Text("Investment Detail View for ID: \(id)")
-              //                            InvestmentDetailView(id: id)
-//            case .accounts:
-//              Text("Account List View")
-//            case .accountDetail(let id):
-//              Text("Account Detail View for ID: \(id)")
             case .login:
               LoginView()
                 .navigationBarBackButtonHidden()
@@ -73,20 +66,6 @@ struct RootView: View {
     .environment(appNavigation)
     .task {
       await authStore.checkAuthentication()
-    }
-  }
-}
-
-struct LoadingView: View {
-  
-  var body: some View {
-    VStack {
-      ProgressView()
-        .progressViewStyle(CircularProgressViewStyle())
-        .padding()
-      Text("Loading...")
-        .font(.headline)
-        .foregroundColor(.gray)
     }
   }
 }

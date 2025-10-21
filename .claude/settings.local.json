@@ -20,7 +20,13 @@
       "Bash(mkdir -p \"/Volumes/rifqissd/rifqi/Documents/Learning/FinancialApp/FinancialApp/Assets.xcassets/Chart4.colorset\")",
       "Bash(mkdir -p \"/Volumes/rifqissd/rifqi/Documents/Learning/FinancialApp/FinancialApp/Assets.xcassets/Chart5.colorset\")",
       "Bash(git add -A)",
-      "Bash(cat \"/Users/rifqifadhlillah/Documents/Learning/FinancialApp/FinancialApp/Utilities/Extensions/Date+Extensions.swift\")"
+      "Bash(cat \"/Users/rifqifadhlillah/Documents/Learning/FinancialApp/FinancialApp/Utilities/Extensions/Date+Extensions.swift\")",
+      "Skill(skill-creator)",
+      "Bash(python3:*)",
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git log:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

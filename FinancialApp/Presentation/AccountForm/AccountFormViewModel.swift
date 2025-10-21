@@ -11,7 +11,7 @@ import Observation
 
 @MainActor
 @Observable
-final class AddAccountViewModel {
+final class AccountFormViewModel {
   @ObservationIgnored
   @Dependency(\.accountService) var accountService
 
@@ -72,8 +72,9 @@ final class AddAccountViewModel {
         name: name.trimmingCharacters(in: .whitespaces),
         category: selectedCategory.rawValue,
         currency: currency,
-        accountNumber: accountNumber.isEmpty ? nil : accountNumber,
-        initialBalance: initialBalance
+        accountNumber: accountNumber.isEmpty ? "" : accountNumber,
+        initialBalance: initialBalance,
+        finalBalance: initialBalance
       )
 
       _ = try await accountService.create(params)
@@ -95,7 +96,9 @@ final class AddAccountViewModel {
       let params = UpdateAccountParams(
         name: name.trimmingCharacters(in: .whitespaces),
         category: selectedCategory.rawValue,
-        accountNumber: accountNumber.isEmpty ? nil : accountNumber
+        accountNumber: accountNumber.isEmpty ? nil : accountNumber,
+        finalBalance: initialBalance,
+        currency: currency
       )
 
       _ = try await accountService.update(id, params)
