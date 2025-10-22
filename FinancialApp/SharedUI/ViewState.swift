@@ -15,12 +15,22 @@ enum ViewState<T> {
     case success(T)
     case error(Error)
     case empty
+  
+  func getData() -> T? {
+    switch self {
+    case .success(let data):
+      return data
+    default:
+      return nil
+    }
+  }
 }
 
 // MARK: - View State View
-struct ViewStateView<T, Content: View, EmptyView: View, ErrorView: View>: View {
+struct ViewStateView<T, Content: View, EmptyView: View, Loading: View, ErrorView: View>: View {
     let state: ViewState<T>
     let content: (T) -> Content
+  let loadingView: () -> Loading
     let emptyView: () -> EmptyView
     let errorView: (Error) -> ErrorView
     let retry: (() -> Void)?
@@ -29,12 +39,14 @@ struct ViewStateView<T, Content: View, EmptyView: View, ErrorView: View>: View {
         state: ViewState<T>,
         @ViewBuilder content: @escaping (T) -> Content,
         @ViewBuilder emptyView: @escaping () -> EmptyView = { DefaultEmptyView() },
+        @ViewBuilder loadingView: @escaping () -> Loading = { LoadingStateView() },
         @ViewBuilder errorView: @escaping (Error) -> ErrorView = { error in DefaultErrorView(error: error) },
         retry: (() -> Void)? = nil
     ) {
         self.state = state
         self.content = content
         self.emptyView = emptyView
+        self.loadingView = loadingView
         self.errorView = errorView
         self.retry = retry
     }
@@ -46,7 +58,7 @@ struct ViewStateView<T, Content: View, EmptyView: View, ErrorView: View>: View {
         Color.clear
         
       case .loading:
-        LoadingStateView()
+        loadingView()
         
       case .success(let data):
         content(data)

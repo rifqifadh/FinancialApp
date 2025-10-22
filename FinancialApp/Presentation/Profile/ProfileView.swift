@@ -12,7 +12,6 @@ struct ProfileView: View {
   @State private var showSignOutConfirmation = false
 
   var body: some View {
-    NavigationView {
       ViewStateView(
         state: viewModel.profileState,
         content: { profile in
@@ -76,7 +75,6 @@ struct ProfileView: View {
           LoadingView(label: "Signing out...")
         }
       }
-    }
   }
 
   // MARK: - Profile Header Card

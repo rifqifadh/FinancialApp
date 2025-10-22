@@ -21,6 +21,7 @@ final class AccountFormViewModel {
   var accountNumber: String = ""
   var currency: String = "IDR"
   var initialBalance: Int = 0
+  var balance: Int = 0
 
   // MARK: - State
   var isSaving = false
@@ -58,6 +59,7 @@ final class AccountFormViewModel {
     self.accountNumber = account.accountNumber ?? ""
     self.currency = account.currency
     self.initialBalance = account.initialBalance
+    self.balance = account.finalBalance
   }
 
   // MARK: - Actions
@@ -94,11 +96,12 @@ final class AccountFormViewModel {
 
     do {
       let params = UpdateAccountParams(
+        id: id,
         name: name.trimmingCharacters(in: .whitespaces),
         category: selectedCategory.rawValue,
-        accountNumber: accountNumber.isEmpty ? nil : accountNumber,
-        finalBalance: initialBalance,
-        currency: currency
+        currency: currency,
+        accountNumber: accountNumber.isEmpty ? "" : accountNumber,
+        finalBalance: balance
       )
 
       _ = try await accountService.update(id, params)

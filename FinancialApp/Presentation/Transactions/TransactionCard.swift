@@ -66,7 +66,7 @@ struct TransactionCard: View {
         // Amount
         VStack(alignment: .trailing, spacing: 2) {
           Text(transaction.amount.toCurrency())
-            .font(AppTheme.Typography.bodySmallBold)
+            .font(AppTheme.Typography.bodyBold)
             .foregroundColor(transaction.type.amountColor)
             .lineLimit(1)
             .fixedSize()

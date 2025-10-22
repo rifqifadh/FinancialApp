@@ -1,75 +1,77 @@
 import Foundation
 
 struct AccountModel: Identifiable, Codable, Sendable, Equatable {
-    let id: String
-    let userId: String
-    let name: String
-    let category: AccountCategory
-    let currency: String
-    let createdAt: Date?
-    let finalBalance: Int
-    let accountNumber: String?
-    let initialBalance: Int
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case name
-        case category
-        case currency
-        case createdAt = "created_at"
-        case finalBalance = "final_balance"
-        case accountNumber = "account_number"
-        case initialBalance = "initial_balance"
-    }
-
-    // Computed properties
-    var balance: Int {
-        finalBalance
-    }
-
-    var balanceChange: Int {
-        finalBalance - initialBalance
-    }
-
-    var hasPositiveBalance: Bool {
-        finalBalance > 0
-    }
-
-    var icon: String {
-        category.icon
-    }
+  let id: String
+  let userId: String
+  let name: String
+  let category: AccountCategory
+  let currency: String
+  let createdAt: Date?
+  let finalBalance: Int
+  let accountNumber: String?
+  let initialBalance: Int
+  var updatedAt: Date? = nil
+  
+  enum CodingKeys: String, CodingKey {
+    case id
+    case userId = "user_id"
+    case name
+    case category
+    case currency
+    case createdAt = "created_at"
+    case finalBalance = "final_balance"
+    case accountNumber = "account_number"
+    case initialBalance = "initial_balance"
+    case updatedAt = "updated_at"
+  }
+  
+  // Computed properties
+  var balance: Int {
+    finalBalance
+  }
+  
+  var balanceChange: Int {
+    finalBalance - initialBalance
+  }
+  
+  var hasPositiveBalance: Bool {
+    finalBalance > 0
+  }
+  
+  var icon: String {
+    category.icon
+  }
 }
 
 // MARK: - Account Category
 enum AccountCategory: String, Codable, CaseIterable, Sendable {
-    case cash = "Cash"
-    case bank = "Bank"
-    case eWallet = "E-Wallet"
-    case creditCard = "Credit Card"
-    case investment = "Investment"
-    case other = "Other"
-
-    var icon: String {
-        switch self {
-        case .cash:
-            return "banknote"
-        case .bank:
-            return "building.columns"
-        case .eWallet:
-            return "creditcard"
-        case .creditCard:
-            return "creditcard.circle"
-        case .investment:
-            return "chart.line.uptrend.xyaxis"
-        case .other:
-            return "folder"
-        }
+  case cash = "Cash"
+  case bank = "Bank"
+  case eWallet = "E-Wallet"
+  case creditCard = "Credit Card"
+  case investment = "Investment"
+  case other = "Other"
+  
+  var icon: String {
+    switch self {
+    case .cash:
+      return "banknote"
+    case .bank:
+      return "building.columns"
+    case .eWallet:
+      return "creditcard"
+    case .creditCard:
+      return "creditcard.circle"
+    case .investment:
+      return "chart.line.uptrend.xyaxis"
+    case .other:
+      return "folder"
     }
-
-    var displayName: String {
-        rawValue
-    }
+  }
+  
+  var displayName: String {
+    rawValue
+  }
 }
 
 // MARK: - Mock Data

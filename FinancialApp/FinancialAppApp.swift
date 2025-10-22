@@ -10,9 +10,11 @@ import GoogleSignIn
 
 @main
 struct FinancialAppApp: App {
+  @State var selectedTab: AppTab = .dashboard
+  
   var body: some Scene {
     WindowGroup {
-      RootView()
+      AppView(selectedTab: $selectedTab)
         .onOpenURL { url in
           GIDSignIn.sharedInstance.handle(url)
         }

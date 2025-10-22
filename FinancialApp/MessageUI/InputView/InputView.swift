@@ -8,18 +8,36 @@
 import SwiftUI
 
 struct InputView: View {
+  @Environment(\.chatTheme) var theme
+  
   @Bindable var viewModel: InputViewModel
+  @State var inputFieldId: UUID = UUID()
+  
+  private var state: InputViewState {
+    viewModel.state
+  }
+  
+  private var onAction: (InputViewAction) -> Void {
+    viewModel.inputViewAction()
+  }
   
   var body: some View {
     VStack {
-      Text("Top View")
       HStack(alignment: .bottom, spacing: 10) {
-        leftView
-        middleView
-        rightView
+        HStack(alignment: .bottom, spacing: 10) {
+//          leftView
+          middleView
+//          rightView
+        }
+        .background {
+          RoundedRectangle(cornerRadius: 18)
+            .fill(theme.colors.inputBG)
+        }
+        
+        rightOutsideButton
       }
     }
-    
+    .background(theme.colors.mainBG)
   }
   
   @ViewBuilder
@@ -29,16 +47,61 @@ struct InputView: View {
   
   @ViewBuilder
   var middleView: some View {
-    Text("Middle")
+    Group {
+      TextInputView(
+        text: $viewModel.text,
+        inputFieldId: inputFieldId
+      )
+    }
+    .frame(minHeight: 48)
   }
   
   @ViewBuilder
   var rightView: some View {
     Text("Right")
   }
+  
+  @ViewBuilder
+  var rightOutsideButton: some View {
+      sendButton
+  }
+  
+  var sendButton: some View {
+    Button {
+      onAction(.send)
+    } label: {
+      Image(systemName: "paperplane.fill")
+        .foregroundStyle(theme.colors.inputBG)
+        .viewSize(48)
+        .circleBackground(theme.colors.sendButtonBackground)
+    }
+  }
+}
+
+enum InputViewState: Sendable {
+  case empty
+  case hasTextOrMedia
+  case editing
+  
+  var canSend: Bool {
+    switch self {
+    case .hasTextOrMedia: return true
+    default: return false
+    }
+  }
+}
+
+public enum InputViewAction: Sendable {
+    case add
+    case camera
+    case send
+
+    case saveEdit
+    case cancelEdit
 }
 
 #Preview {
-//  InputView(viewModel: .init())
-  Text("lkjaslkfj")
+  InputView(viewModel: .init())
+    .environment(\.chatTheme, ChatTheme())
+    .environmentObject(GlobalFocusState())
 }

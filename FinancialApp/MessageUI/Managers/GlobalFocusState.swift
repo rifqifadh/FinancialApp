@@ -13,7 +13,7 @@
 import Observation
 import Combine
 
-@Observable
+@MainActor
 final class GlobalFocusState: ObservableObject {
-    var focus: Focusable?
+    @Published var focus: Focusable? 
 }

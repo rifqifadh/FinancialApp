@@ -56,7 +56,7 @@ extension ProfileService: DependencyKey {
     updateUserMetadata: { params in
       // Update user metadata in Supabase Auth
       let updatedUser = try await SupabaseManager.shared.client.auth.update(
-        user: UserAttributes(data: params.asDictionary)
+        user: UserAttributes(data: params.asDictionary as! [String : AnyJSON])
       )
 
       // Return updated profile

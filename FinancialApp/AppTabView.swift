@@ -19,49 +19,47 @@ struct AppTabView: View {
   @Environment(AppNavigation.self) var appNavigation
   
   var body: some View {
-      TabView {
-        TransactionView()
-          .tabItem {
-            Label("Expenses", systemImage: "dollarsign.circle")
-          }
-
-        AccountsView()
-          .tabItem {
-            Label("Accounts", systemImage: "wallet.pass")
-          }
-
-//        ChatRoomView(viewModel: chatViewModel)
-//          .tabItem {
-//            Label("Chat", systemImage: "message")
-//          }
-
-        NavigationView {
-          Text("LKJLKJLKJ")
-//          InvestmentsView(viewModel: investmentsViewModel)
-        }
+    TabView {
+      TransactionView()
         .tabItem {
-          Label("Porto", systemImage: "chart.line.uptrend.xyaxis")
+          Label("Expenses", systemImage: "dollarsign.circle")
         }
-
-        ProfileView()
-          .tabItem {
-            Label("Profile", systemImage: "gear")
-          }
-      }
+      
+      AccountsView()
+        .tabItem {
+          Label("Accounts", systemImage: "wallet.pass")
+        }
+      
+      //        ChatRoomView(viewModel: chatViewModel)
+      //          .tabItem {
+      //            Label("Chat", systemImage: "message")
+      //          }
+      
+      InvestmentsView()
+        .tabItem {
+          Label("Investments", systemImage: "chart.line.uptrend.xyaxis")
+        }
+      
+      ProfileView()
+        .tabItem {
+          Label("Profile", systemImage: "gear")
+        }
+    }
+    .environment(appNavigation)
   }
 }
 
 struct SettingsView: View {
-    
+  
   var body: some View {
-      VStack {
-          Text("Settings Tab")
-          Button("Logout") {
-              Task {
-//                  try await mySupabaseClient.auth.signOut()
-              }
-          }
+    VStack {
+      Text("Settings Tab")
+      Button("Logout") {
+        Task {
+          //                  try await mySupabaseClient.auth.signOut()
+        }
       }
+    }
     
   }
 }

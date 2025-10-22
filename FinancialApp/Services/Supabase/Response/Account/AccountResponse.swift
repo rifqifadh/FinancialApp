@@ -29,3 +29,13 @@ extension AccountResponse {
     totalBalance: AccountModel.mockAccounts.reduce(0) { $0 + $1.finalBalance }
   )
 }
+
+//case id
+//case userId = "user_id"
+//case name
+//case category
+//case currency
+//case createdAt = "created_at"
+//case finalBalance = "final_balance"
+//case accountNumber = "account_number"
+//case initialBalance = "initial_balance"

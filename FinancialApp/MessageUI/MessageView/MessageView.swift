@@ -325,5 +325,6 @@ extension View {
     showMessageTimeView: true,
     font: UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 15))
   )
+  .environment(\.chatTheme, ChatTheme())
 }
 

@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct AccountsView: View {
+  @Environment(RouterPath.self) private var routerPath
+  
   @State private var viewModel = AccountsViewModel()
   @State private var showingAddAccount = false
   
   var body: some View {
-    NavigationView {
       ViewStateView(state: viewModel.accountStateView) { state in
         ScrollView {
           content
@@ -52,7 +53,6 @@ struct AccountsView: View {
           }
         }
       }
-    }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
   
@@ -153,7 +153,7 @@ struct AccountsView: View {
       VStack(spacing: AppTheme.Spacing.sm) {
         ForEach(viewModel.filteredAccounts) { account in
           AccountCard(account: account) {
-            // Handle account tap
+            routerPath.navigate(to: .accountDetail(id: account.id))
           }
         }
       }

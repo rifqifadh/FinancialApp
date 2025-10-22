@@ -115,7 +115,25 @@ struct AccountFormView: View {
               }
             }
             .padding(.vertical, 4)
+          } else if case .edit = mode {
+            VStack(alignment: .leading, spacing: 8) {
+              Text("Balance")
+                .font(AppTheme.Typography.caption)
+                .foregroundStyle(AppTheme.Colors.secondaryText)
+
+              HStack {
+                Text(viewModel.currency)
+                  .font(AppTheme.Typography.body)
+                  .foregroundStyle(AppTheme.Colors.secondaryText)
+
+                TextField("0", value: $viewModel.balance, format: .number)
+                  .textFieldStyle(.plain)
+                  .font(AppTheme.Typography.body)
+                  .keyboardType(.numberPad)
+              }
+            }
           }
+          
         } header: {
           Text("Financial Information")
         }

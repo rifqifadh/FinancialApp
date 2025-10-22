@@ -33,11 +33,24 @@ struct TransactionModel: Codable {
   }
 }
 
-enum TransactionType: String, Codable {
+enum TransactionType: String, Codable, CustomStringConvertible {
   case expense
   case transfer
   case income
   case split_bill
+  
+  var description: String {
+    switch self {
+    case .expense:
+      return "Expense"
+    case .transfer:
+      return "Transfer"
+    case .income:
+      return "Income"
+    case .split_bill:
+      return "Split Bill"
+    }
+  }
 }
 
 // MARK: - Mock Data

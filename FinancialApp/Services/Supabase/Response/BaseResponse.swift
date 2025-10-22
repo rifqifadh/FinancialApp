@@ -8,5 +8,5 @@
 struct BaseResponse<TData: Decodable & Sendable>: Decodable, Sendable {
   let success: Bool
   let message: String
-  let data: TData
+  let data: TData?
 }

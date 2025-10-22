@@ -18,20 +18,18 @@ struct TextInputView: View {
   var body: some View {
     TextField("", text: $text, axis: .vertical)
       .customFocus($globalFocusState.focus, equals: .uuid(inputFieldId))
-//      .placeholder(when: text.isEmpty) {
-//        Text("Message")
-//          .foregroundStyle(theme.colors.inputPlaceholderText)
-//      }
+      .placeholder(when: text.isEmpty) {
+        Text("Type a message...")
+          .padding(.horizontal, 6)
+          .foregroundStyle(theme.colors.inputPlaceholderText)
+      }
       .foregroundStyle(theme.colors.inputText)
       .padding(.vertical, 10)
+      .padding(.horizontal, 12)
       .simultaneousGesture(
         TapGesture().onEnded {
           globalFocusState.focus = .uuid(inputFieldId)
         }
       )
   }
-}
-
-#Preview {
-  Text("lkjasdlkfja")
 }

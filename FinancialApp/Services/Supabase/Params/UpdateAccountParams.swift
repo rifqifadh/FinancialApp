@@ -6,13 +6,15 @@
 //
 
 struct UpdateAccountParams: Codable, Sendable {
-  let name: String?
-  let category: String?
-  let accountNumber: String?
+  let id: String
+  let name: String
+  let category: String
+  let currency: String
+  let accountNumber: String
   let finalBalance: Int?
-  let currency: String?
   
   enum CodingKeys: String, CodingKey {
+    case id = "account_id"
     case name
     case category
     case currency

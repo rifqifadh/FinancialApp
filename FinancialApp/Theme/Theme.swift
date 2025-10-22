@@ -61,26 +61,40 @@ struct AppTheme {
   
   // MARK: - Typography
   struct Typography {
-    // Headers
-    static let largeTitle = Font.system(size: 34, weight: .bold, design: .rounded)
-    static let title1 = Font.system(size: 28, weight: .bold, design: .rounded)
-    static let title2 = Font.system(size: 22, weight: .bold, design: .rounded)
-    static let title3 = Font.system(size: 20, weight: .semibold, design: .rounded)
+    // MARK: - Large Titles
+    static let largeTitle = Font.largeTitle.weight(.regular)
     
-    // Body Text
-    static let body = Font.system(size: 17, weight: .regular, design: .default)
-    static let bodyBold = Font.system(size: 17, weight: .semibold, design: .default)
-    static let bodySmall = Font.system(size: 14, weight: .regular, design: .default)
-    static let bodySmallBold = Font.system(size: 14, weight: .semibold, design: .default)
+    // MARK: - Titles
+    static let title1 = Font.title.weight(.regular)
+    static let title2 = Font.title2.weight(.regular)
+    static let title3 = Font.title3.weight(.regular)
     
-    // Financial Numbers - Using monospaced for better alignment
-    static let financialLarge = Font.system(size: 32, weight: .bold, design: .rounded).monospacedDigit()
-    static let financialMedium = Font.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit()
-    static let financialSmall = Font.system(size: 17, weight: .medium, design: .default).monospacedDigit()
+    // MARK: - Headlines
+    static let headline = Font.headline
+    static let subheadline = Font.subheadline
     
-    // Supporting Text
-    static let caption = Font.system(size: 12, weight: .regular, design: .default)
-    static let footnote = Font.system(size: 13, weight: .regular, design: .default)
+    // MARK: - Body Text
+    static let body = Font.body
+    static let bodyEmphasized = Font.body.weight(.medium)
+    
+    // MARK: - Supporting Text
+    static let callout = Font.callout
+    static let footnote = Font.footnote
+    static let caption = Font.caption
+    static let caption2 = Font.caption2
+    
+    // MARK: - Financial Numbers (Custom additions with monospaced digits)
+    static let financialLarge = Font.largeTitle.weight(.semibold).monospacedDigit()
+    static let financialMedium = Font.title2.weight(.medium).monospacedDigit()
+    static let financialSmall = Font.body.weight(.medium).monospacedDigit()
+    static let financialCaption = Font.callout.weight(.medium).monospacedDigit()
+    
+    // MARK: - Emphasis Variants
+    static let title1Bold = Font.title.weight(.bold)
+    static let title2Bold = Font.title2.weight(.bold)
+    static let title3Bold = Font.title3.weight(.bold)
+    static let bodyBold = Font.body.weight(.semibold)
+    static let calloutEmphasized = Font.callout.weight(.medium)
   }
   
   // MARK: - Spacing

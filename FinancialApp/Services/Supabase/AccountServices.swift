@@ -2,9 +2,7 @@ import Dependencies
 import Foundation
 import Supabase
 
-
-
-struct AccountService: Sendable {
+struct AccountServices: Sendable {
   var fetchAll: @Sendable () async throws -> [AccountModel]
   var fetchById: @Sendable (_ id: String) async throws -> AccountModel?
   var create: @Sendable (_ account: CreateAccountParams) async throws -> Void
@@ -13,8 +11,8 @@ struct AccountService: Sendable {
 }
 
 // MARK: - Dependency Key
-extension AccountService: DependencyKey {
-  static let liveValue = AccountService(
+extension AccountServices: DependencyKey {
+  static let liveValue = AccountServices(
     fetchAll: {
       let userId = try await SupabaseManager.shared.client.auth.user().id.uuidString
       let accounts: [AccountModel] = try await SupabaseManager.shared.client
@@ -42,7 +40,7 @@ extension AccountService: DependencyKey {
     },
     update: { id, params in
       try await SupabaseManager.shared.client
-        .rpc("update_account", params: params)
+        .rpc("update_account", params: ["params": params])
         .execute()
     },
     delete: { id in
@@ -54,7 +52,7 @@ extension AccountService: DependencyKey {
     }
   )
   
-  static let testValue = AccountService(
+  static let previewValue: AccountServices = AccountServices(
     fetchAll: {
       //      BaseResponse(success: true, message: "OK", data:
       AccountModel.mockAccounts
@@ -71,8 +69,8 @@ extension AccountService: DependencyKey {
 
 // MARK: - Dependency Values
 extension DependencyValues {
-  var accountService: AccountService {
-    get { self[AccountService.self] }
-    set { self[AccountService.self] = newValue }
+  var accountService: AccountServices {
+    get { self[AccountServices.self] }
+    set { self[AccountServices.self] = newValue }
   }
 }

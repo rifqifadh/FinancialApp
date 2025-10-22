@@ -385,7 +385,7 @@ struct ChatTheme {
             
             self.inputView = InputView(
                 add: add ?? Image("add"),
-                arrowSend: arrowSend ?? Image("arrowSend"),
+                arrowSend: arrowSend ?? Image(systemName: "paperplane.fill"),
                 sticker: sticker ?? Image("sticker"),
                 attach: attach ?? Image("attach"),
                 attachCamera: attachCamera ?? Image("attachCamera"),

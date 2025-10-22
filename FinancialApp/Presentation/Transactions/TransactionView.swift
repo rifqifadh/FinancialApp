@@ -13,7 +13,7 @@ struct TransactionView: View {
   
   // MARK: - Body
   var body: some View {
-    NavigationView {
+    
       ZStack {
         AppTheme.Colors.background
           .ignoresSafeArea()
@@ -88,7 +88,6 @@ struct TransactionView: View {
         )
       }
       .searchable(text: $viewModel.searchText)
-    }
   }
   
   // MARK: - Summary Card

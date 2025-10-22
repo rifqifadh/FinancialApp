@@ -62,7 +62,6 @@ struct RootView: View {
       }
       .navigationViewStyle(StackNavigationViewStyle())
     }
-    
     .environment(appNavigation)
     .task {
       await authStore.checkAuthentication()
