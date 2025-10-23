@@ -85,8 +85,8 @@ struct Message: Identifiable, Equatable, Sendable, Hashable {
 extension MessageResponse {
   func toMessage(currentUserId: String) -> Message {
     return Message(
-      id: id ?? UUID().uuidString,
-      user: .init(id: userId, name: name ?? "-", avatarURL: imageUrl == nil ? nil : URL(string: self.imageUrl ?? "")!, type: self.role == "user" ? .current : .other),
+      id: id,
+      user: .init(id: id, name: "-", avatarURL: nil, type: self.role == "user" ? .current : .other),
       status: .read,
       createdAt: self.createdAt ?? Date(),
       text: self.content,

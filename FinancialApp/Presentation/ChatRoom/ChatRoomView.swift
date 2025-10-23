@@ -20,11 +20,17 @@ struct ChatRoomView: View {
   var body: some View {
     VStack {
       ViewStateView(state: viewModel.chatMessagesState) { data in
-        ChatView(messages: data) { draft in
+//        ChatView(messages: data) { draft in
+//          print("Chatroom: Sending message: \(draft)")
+//          Task {
+//            await viewModel.sendMessage(draft)
+//          }
+//        }
+        ChatView(messages: data, didSendMessage: { draft in
           Task {
             await viewModel.sendMessage(draft)
           }
-        }
+        })
       } emptyView: {
         ChatView(messages: []) { draft in
           

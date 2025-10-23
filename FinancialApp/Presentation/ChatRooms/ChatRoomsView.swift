@@ -16,13 +16,13 @@ struct ChatRoomsView: View {
   @State private var searchText = ""
 
   // Mock data
-  @State private var chatRooms: [ChatRoom] = []
+  @State private var chatRooms: [ConversationResponse] = []
 
-  var filteredChatRooms: [ChatRoom] {
+  var filteredChatRooms: [ConversationResponse] {
     if searchText.isEmpty {
       return chatRooms
     } else {
-      return chatRooms.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+      return chatRooms.filter { $0.title?.lowercased().contains(searchText.lowercased()) ?? false }
     }
   }
 
@@ -32,10 +32,10 @@ struct ChatRoomsView: View {
         if filteredChatRooms.isEmpty {
           emptyStateView
         } else {
-          ForEach(filteredChatRooms) { room in
+          ForEach(filteredChatRooms, id: \.id) { room in
             ChatRoomCard(room: room) {
               // Handle tap - navigate to chat detail
-              routerPath.navigate(to: .chatRoom(id: room.id))
+              routerPath.navigate(to: .chatRoom(id: "\(room.id)"))
             }
           }
         }
@@ -45,7 +45,7 @@ struct ChatRoomsView: View {
     }
     .task {
       do {
-        chatRooms = try await chatServices.fetchRooms()
+        chatRooms = try await chatServices.fetchConversations()
       } catch {
         print("Error fetching chat rooms: \(error)")
       }
@@ -107,7 +107,7 @@ struct ChatRoomsView: View {
 
 // MARK: - Chat Room Card
 struct ChatRoomCard: View {
-  let room: ChatRoom
+  let room: ConversationResponse
   let onTap: () -> Void
 
   var body: some View {
@@ -126,16 +126,15 @@ struct ChatRoomCard: View {
 
         // Room Info
         VStack(alignment: .leading, spacing: 4) {
-          Text(room.name)
+          Text(room.title ?? "-")
             .font(AppTheme.Typography.bodyBold)
             .foregroundStyle(AppTheme.Colors.primaryText)
             .lineLimit(1)
 
-          if let createdAt = room.createdAt {
-            Text(formatDate(createdAt))
+          
+            Text(formatDate(room.createdAt))
               .font(AppTheme.Typography.caption)
               .foregroundStyle(AppTheme.Colors.tertiaryText)
-          }
         }
 
         Spacer()

@@ -34,6 +34,7 @@ final class InputViewModel {
   }
   
   func send() {
+    print("Send it bro")
     Task {
       //              await recorder.stopRecording()
       //              await recordingPlayer?.reset()

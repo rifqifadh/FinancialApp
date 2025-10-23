@@ -16,23 +16,38 @@
 import Foundation
 
 struct MessageResponse: Codable {
-  let id: String?
-  let userId: String
+  let id: String
   let createdAt: Date?
+  let conversationId: String?
+  let role: String?
   let content: String
-  let imageUrl: String?
-  let role: String
-  let channelId: String
-  let name: String?
+  let metadata: String?
+  let userId: String?
+  let agentId: String?
+  
+  init(id: String,
+       createdAt: Date?,
+       conversationId: String? = nil,
+       role: String? = nil,
+       content: String,
+       metadata: String? = nil,
+       userId: String? = nil,
+       agentId: String? = nil) {
+    self.id = id
+    self.createdAt = createdAt
+    self.conversationId = conversationId
+    self.role = role
+    self.content = content
+    self.metadata = metadata
+    self.userId = userId
+    self.agentId = agentId
+  }
   
   enum CodingKeys: String, CodingKey {
-    case id
-    case userId = "user_id"
+    case id, role, content, metadata
     case createdAt = "created_at"
-    case content
-    case imageUrl = "image_url"
-    case role
-    case channelId = "channel_id"
-    case name
+    case conversationId = "conversation_id"
+    case userId = "user_id"
+    case agentId = "agent_id"
   }
 }

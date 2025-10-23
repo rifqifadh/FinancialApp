@@ -14,15 +14,17 @@ import SwiftUI
   /// - Note: Used to further refine a messages frame (instead of using the cell boundary), mainly used for positioning reactions
   var messageFrame: CGRect = .zero
   var messageMenuRow: MessageRow?
-  
+
+  let inputFieldId = UUID()
   /// Provides a mechanism to issue haptic feedback to the user
   /// - Note: Used when launching the MessageMenu
   
-  let inputFieldId = UUID()
+  var didSendMessage: (DraftMessage) -> Void = {_ in}
   var globalFocusState: GlobalFocusState?
-  private(set) var inputViewModel: InputViewModel?
+  var inputViewModel: InputViewModel?
   
   func sendMessage(_ message: DraftMessage) {
+    didSendMessage(message)
   }
   
   func messageMenuAction() -> (Message, DefaultMessageMenuAction) -> Void {

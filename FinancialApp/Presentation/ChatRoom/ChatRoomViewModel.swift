@@ -28,8 +28,8 @@ import Foundation
     do {
       chatMessagesState = .loading
       let messages = try await chatServices.fetchMessages(id)
-      let formattedM = messages.map { $0.toMessage() }
-      chatMessagesState = messages.isEmpty ? .empty : .success(formattedM)
+      let formattedM = messages.data?.map { $0.toMessage() } ?? []
+      chatMessagesState = .success(formattedM)
     } catch {
       chatMessagesState = .error(error)
     }
@@ -38,17 +38,17 @@ import Foundation
   func sendMessage(_ draft: DraftMessage) async {
     var data = chatMessagesState.getData() ?? []
     
-    do {
-      let currentUser = try await profileService.getCurrentUser()
-      let params = createMessageParams(from: draft, userId: currentUser?.id ?? "", name: currentUser?.fullName ?? "" )
-      let result = try await chatServices.sendMessage(params)
-      if let responseData = result.data {
-        data.append(responseData.toMessage())
-        chatMessagesState = .success(data)
-      }
-    } catch {
-      print("Error sending message: \(error)")
-    }
+//    do {
+//      let currentUser = try await profileService.getCurrentUser()
+//      let params = createMessageParams(from: draft, userId: currentUser?.id ?? "", name: currentUser?.fullName ?? "" )
+//      let result = try await chatServices.sendMessage(params)
+//      if let responseData = result.data {
+//        data.append(responseData.toMessage())
+//        chatMessagesState = .success(data)
+//      }
+//    } catch {
+//      print("Error sending message: \(error)")
+//    }
   }
   
   private func createMessageParams(from draft: DraftMessage, userId: String, name: String) -> MessageParams {
@@ -56,30 +56,30 @@ import Foundation
   }
   
   func subscribeToMessages() async {
-    for await (message, status) in chatServices.subscribeToMessagesWithStatus(id) {
-      if let status = status {
-        print("Channel subscription status: \(status)")
-        //          if status == .subscribed {
-        //            isLoading = false
-        //          }
-      }
-      
-      if let message {
-        if message.role != "user" {
-          var data = chatMessagesState.getData() ?? []
-          data.append(message.toMessage())
-          chatMessagesState = .success(data)
-        }
-      }
-    }
+//    for await (message, status) in chatServices.subscribeToMessagesWithStatus(id) {
+//      if let status = status {
+//        print("Channel subscription status: \(status)")
+//        //          if status == .subscribed {
+//        //            isLoading = false
+//        //          }
+//      }
+//      
+//      if let message {
+//        if message.role != "user" {
+//          var data = chatMessagesState.getData() ?? []
+//          data.append(message.toMessage())
+//          chatMessagesState = .success(data)
+//        }
+//      }
+//    }
   }
 }
 
 extension MessageResponse {
   func toMessage() -> Message {
     Message(
-      id: self.id ?? "",
-      user: .init(id: self.userId , name: self.name ?? "", avatarURL: nil, type: self.role == "user" ? .current : .system),
+      id: self.id,
+      user: .init(id: id, name: "-", avatarURL: nil, type: self.role == "user" ? .current : .other),
       text: self.content
     )
   }

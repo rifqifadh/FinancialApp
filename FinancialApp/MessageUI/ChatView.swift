@@ -51,7 +51,7 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
   
   @Environment(\.chatTheme) private var theme
   
-  @State private var viewModel: ChatViewModel = .init()
+  @State private var viewModel = ChatViewModel()
   @State private var inputViewModel: InputViewModel = .init()
   @StateObject private var globalFocusState = GlobalFocusState()
   
@@ -111,7 +111,20 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
   var body: some View {
     mainView
       .onAppear {
+        viewModel.didSendMessage = didSendMessage
+        viewModel.inputViewModel = inputViewModel
         viewModel.globalFocusState = globalFocusState
+        
+        inputViewModel.didSendMessage = { value in
+          Task { @MainActor in
+            self.didSendMessage(value)
+          }
+          if type == .conversation {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+              NotificationCenter.default.post(name: .onScrollToBottom, object: nil)
+            }
+          }
+        }
       }
   }
   
