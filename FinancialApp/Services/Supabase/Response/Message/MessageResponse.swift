@@ -18,21 +18,24 @@ import Foundation
 struct MessageResponse: Codable, Equatable {
   let id: String
   let createdAt: Date?
-  let conversationId: Int?
+  let conversationId: String?
   let role: String?
   let content: String
   let metadata: String?
   let userId: String?
   let agentId: String?
+  let agent: AgentResponse?
   
   init(id: String,
        createdAt: Date?,
-       conversationId: Int? = nil,
+       conversationId: String? = nil,
        role: String? = nil,
        content: String,
        metadata: String? = nil,
        userId: String? = nil,
-       agentId: String? = nil) {
+       agentId: String? = nil,
+       agent: AgentResponse? = nil
+  ) {
     self.id = id
     self.createdAt = createdAt
     self.conversationId = conversationId
@@ -41,10 +44,11 @@ struct MessageResponse: Codable, Equatable {
     self.metadata = metadata
     self.userId = userId
     self.agentId = agentId
+    self.agent = agent
   }
   
   enum CodingKeys: String, CodingKey {
-    case id, role, content, metadata
+    case id, role, content, metadata, agent
     case createdAt = "created_at"
     case conversationId = "conversation_id"
     case userId = "user_id"

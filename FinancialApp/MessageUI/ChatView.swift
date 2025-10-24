@@ -54,6 +54,7 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
   @State private var viewModel = ChatViewModel()
   @State private var inputViewModel: InputViewModel = .init()
   @StateObject private var globalFocusState = GlobalFocusState()
+  @State private var keyboardState = KeyboardState()
   
   // MARK: - Parameters
   
@@ -110,22 +111,7 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
   
   var body: some View {
     mainView
-      .onAppear {
-        viewModel.didSendMessage = didSendMessage
-        viewModel.inputViewModel = inputViewModel
-        viewModel.globalFocusState = globalFocusState
-        
-        inputViewModel.didSendMessage = { value in
-          Task { @MainActor in
-            self.didSendMessage(value)
-          }
-          if type == .conversation {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-              NotificationCenter.default.post(name: .onScrollToBottom, object: nil)
-            }
-          }
-        }
-      }
+      .environment(keyboardState)
   }
   
   var mainView: some View {
@@ -160,9 +146,30 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
       ids: ids,
       listSwipeActions: listSwipeActions
     )
-    .id(ids)
     .applyIf(!isScrollEnabled) {
       $0.frame(height: tableContentHeight)
+    }
+    .id(ids)
+    .simultaneousGesture(
+      TapGesture().onEnded {
+        globalFocusState.focus = nil
+      }
+    )
+    .onAppear {
+      viewModel.didSendMessage = didSendMessage
+      viewModel.inputViewModel = inputViewModel
+      viewModel.globalFocusState = globalFocusState
+      
+      inputViewModel.didSendMessage = { value in
+        Task { @MainActor in
+          self.didSendMessage(value)
+        }
+        if type == .conversation {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            NotificationCenter.default.post(name: .onScrollToBottom, object: nil)
+          }
+        }
+      }
     }
   }
   
@@ -173,7 +180,8 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
         inputFieldId: viewModel.inputFieldId,
       )
     }
-    .environmentObject(GlobalFocusState())
+    .padding(.horizontal)
+    .environmentObject(globalFocusState)
     .safeAreaPadding(.bottom)
     
   }
@@ -222,8 +230,8 @@ extension ChatView where MessageContent == EmptyView, MenuAction == DefaultMessa
 }
 
 #Preview {
-  let romeo = User(id: "romeo", name: "Romeo Montague", avatarURL: nil, isCurrentUser: true)
-  let juliet = User(id: "juliet", name: "Juliet Capulet", avatarURL: nil, isCurrentUser: false)
+  let romeo = UserDataMessage(id: "romeo", name: "Romeo Montague", avatarURL: nil, isCurrentUser: true)
+  let juliet = UserDataMessage(id: "juliet", name: "Juliet Capulet", avatarURL: nil, isCurrentUser: false)
   
   let monday = try! Date.iso8601Date.parse("2025-05-12")
   let tuesday = try! Date.iso8601Date.parse("2025-05-13")

@@ -11,7 +11,7 @@ struct AppView: View {
   @Binding var selectedTab: AppTab
   @State private var authStore = AuthenticationStore()
   @State private var chatTheme = ChatTheme()
-  
+   
   var body: some View {
     Group {
       if authStore.authState == .authenticated {

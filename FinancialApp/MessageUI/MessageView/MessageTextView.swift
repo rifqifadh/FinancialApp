@@ -18,7 +18,7 @@ struct MessageTextView: View {
   
   let text: String
   let messageStyler: (String) -> AttributedString
-  let userType: UserType
+  let userType: UserMessageType
   let shouldShowLinkPreview: (URL) -> Bool
   let messageLinkPreviewLimit: Int
   

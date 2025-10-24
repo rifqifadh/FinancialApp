@@ -16,6 +16,7 @@ extension View {
       case .investments: InvestmentsView()
       case .investmentDetail(let id): InvestmentDetailView(investmentId: id)
       case .chatRoom(let id): ChatRoomView(id: id)
+      case .transactions: TransactionView()
       default: Text("Empty Navigation Destination")
       }
     }

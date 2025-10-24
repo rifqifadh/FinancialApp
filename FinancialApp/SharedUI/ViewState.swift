@@ -63,7 +63,6 @@ struct ViewStateView<T: Equatable, Content: View, Loading: View, ErrorView: View
         loadingView()
         
       case .success(let data):
-        let _ = print("🔄 success: \(state)")
         content(data)
         
       case .error(let error):

@@ -293,8 +293,8 @@ extension View {
 
 
 #Preview("Message Row", traits: .sizeThatFitsLayout) {
-  let stan = User(id: "stan", name: "Stan", avatarURL: nil, isCurrentUser: false)
-  let john = User(id: "john", name: "John", avatarURL: nil, isCurrentUser: true)
+  let stan = UserDataMessage(id: "stan", name: "Stan", avatarURL: nil, isCurrentUser: false)
+  let john = UserDataMessage(id: "john", name: "John", avatarURL: nil, isCurrentUser: true)
   var shortText = "Hi, buddy!"
   var longText = "This is very long message to show in preview and for examples so i can see it."
   var replyedMessage = Message(

@@ -8,7 +8,7 @@
 import Foundation
 
 struct MessageParams: Encodable {
-  let conversationId: Int
+  let conversationId: String
   let role: Role
   let content: String
   let userId: String
@@ -23,7 +23,7 @@ struct MessageParams: Encodable {
     case userId = "user_id"
   }
   
-  init(conversationId: Int, role: Role, content: String, userId: String) {
+  init(conversationId: String, role: Role, content: String, userId: String) {
     self.conversationId = conversationId
     self.role = role
     self.content = content

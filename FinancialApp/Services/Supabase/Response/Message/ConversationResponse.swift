@@ -8,7 +8,7 @@
 import Foundation
 
 struct ConversationResponse: Codable {
-  let id: Int
+  let id: String
   let userId: String?
   let agentId: String?
   let title: String?

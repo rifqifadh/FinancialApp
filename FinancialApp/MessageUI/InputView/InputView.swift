@@ -9,6 +9,7 @@ import SwiftUI
 
 struct InputView: View {
   @Environment(\.chatTheme) var theme
+  @Environment(KeyboardState.self) var keyboardState
   
   @Bindable var viewModel: InputViewModel
   @State var inputFieldId: UUID = UUID()
@@ -33,9 +34,11 @@ struct InputView: View {
           RoundedRectangle(cornerRadius: 18)
             .fill(theme.colors.inputBG)
         }
-        
         rightOutsideButton
       }
+    }
+    .onDragExt(towards: .bottom, ofAmount: 100...) {
+      keyboardState.resignFirstResponder()
     }
     .background(theme.colors.mainBG)
   }
@@ -52,7 +55,9 @@ struct InputView: View {
         text: $viewModel.text,
         inputFieldId: inputFieldId
       )
+      .autocorrectionDisabled()
     }
+    .padding(.horizontal)
     .frame(minHeight: 48)
   }
   

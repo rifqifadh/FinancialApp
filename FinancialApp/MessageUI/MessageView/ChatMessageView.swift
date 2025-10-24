@@ -41,8 +41,8 @@ struct ChatMessageView: View {
 
 #Preview {
   let monday = try! Date.iso8601Date.parse("2025-05-12")
-  let romeo = User(id: "romeo", name: "Romeo Montague", avatarURL: nil, isCurrentUser: true)
-  let john = User(id: "john", name: "John", avatarURL: nil, isCurrentUser: false)
+  let romeo = UserDataMessage(id: "romeo", name: "Romeo Montague", avatarURL: nil, isCurrentUser: true)
+  let john = UserDataMessage(id: "john", name: "John", avatarURL: nil, isCurrentUser: false)
   let message = Message(
     id: "26tb", user: romeo, status: .read, createdAt: monday,
     text: "And I’ll still stay, to have thee still forget")

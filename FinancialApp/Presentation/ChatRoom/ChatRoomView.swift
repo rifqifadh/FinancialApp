@@ -7,16 +7,12 @@
 
 import SwiftUI
 
-let mockMessages = [Message(id: "2", user: .init(id: "1", name: "asd", avatarURL: nil, isCurrentUser: true), status: .sent, text: "LJLKJASF")]
-
-
 struct ChatRoomView: View {
-  let id: Int
+  let id: String
   
   @State private var viewModel: ChatRoomViewModel
-  @State private var messages: [Message] = mockMessages
   
-  init(id: Int) {
+  init(id: String) {
     self.id = id
     self.viewModel = ChatRoomViewModel(id: id)
   }
@@ -31,6 +27,7 @@ struct ChatRoomView: View {
         })
       }
     }
+    .background(AppTheme.Colors.background)
     .task {
       await viewModel.loadChatMessages()
       await viewModel.subscribeToMessages()
@@ -38,9 +35,4 @@ struct ChatRoomView: View {
     .navigationTitle("Chat Room")
     .navigationBarTitleDisplayMode(.inline)
   }
-}
-
-#Preview {
-  ChatRoomView(id: 1)
-    .environment(\.chatTheme, ChatTheme())
 }

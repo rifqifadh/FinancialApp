@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension ChatTheme.Colors {
-    func messageBG(_ type: UserType) -> Color {
+    func messageBG(_ type: UserMessageType) -> Color {
         switch type {
         case .current: messageMyBG
         case .other: messageFriendBG
@@ -16,7 +16,7 @@ extension ChatTheme.Colors {
         }
     }
     
-    func messageText(_ type: UserType) -> Color {
+    func messageText(_ type: UserMessageType) -> Color {
         switch type {
         case .current: messageMyText
         case .other: messageFriendText
@@ -24,7 +24,7 @@ extension ChatTheme.Colors {
         }
     }
     
-    func messageTimeText(_ type: UserType) -> Color {
+    func messageTimeText(_ type: UserMessageType) -> Color {
         switch type {
         case .current: messageMyTimeText
         case .other: messageFriendTimeText

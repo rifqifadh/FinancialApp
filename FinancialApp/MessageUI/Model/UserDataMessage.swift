@@ -7,15 +7,15 @@
 
 import Foundation
 
-public enum UserType: Int, Codable, Sendable, Equatable {
+public enum UserMessageType: Int, Codable, Sendable, Equatable {
     case current = 0, other, system
 }
 
-public struct User: Codable, Identifiable, Hashable, Sendable {
+public struct UserDataMessage: Codable, Identifiable, Hashable, Sendable {
     public let id: String
     public let name: String
     public let avatarURL: URL?
-    public let type: UserType
+    public let type: UserMessageType
     public var isCurrentUser: Bool { type == .current }
     
     public init(id: String, name: String, avatarURL: URL?, isCurrentUser: Bool) {
@@ -25,14 +25,14 @@ public struct User: Codable, Identifiable, Hashable, Sendable {
         self.type = isCurrentUser ? .current : .other
     }
     
-    public init(id: String, name: String, avatarURL: URL?, type: UserType) {
+    public init(id: String, name: String, avatarURL: URL?, type: UserMessageType) {
         self.id = id
         self.name = name
         self.avatarURL = avatarURL
         self.type = type
     }
     
-    public static func == (lhs: User, rhs: User) -> Bool {
+    public static func == (lhs: UserDataMessage, rhs: UserDataMessage) -> Bool {
         return lhs.id == rhs.id &&
         lhs.name == rhs.name &&
         lhs.avatarURL == rhs.avatarURL &&

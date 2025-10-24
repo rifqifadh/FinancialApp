@@ -11,12 +11,10 @@ import Foundation
 
 struct ChatServices: Sendable {
   let fetchConversations: @Sendable () async throws -> [ConversationResponse]
-  let fetchMessages: @Sendable (_ conversationId: Int) async throws -> BaseResponse<[MessageResponse]>
+  let fetchMessages: @Sendable (_ conversationId: String) async throws -> BaseResponse<[MessageResponse]>
   let sendMessage: @Sendable (MessageParams) async throws -> BaseResponse<MessageResponse>
-//  let fetchMessages: @Sendable (_ channelId: String) async throws -> [MessageResponse]
-  //  let generateChannel: (_ userId: String) async throws -> ChatChannelResponse
-//    let subscribeToMessages: @Sendable (_ channelId: String) -> AsyncStream<MessageResponse>
-//    let subscribeToMessagesWithStatus: @Sendable (_ channelId: String) -> AsyncStream<(MessageResponse?, RealtimeChannelStatus?)>
+  let subscribeToInsertions: @Sendable (_ conversationId: String) -> AsyncStream<(MessageResponse?, RealtimeChannelStatus?)>
+  let fetchMessage: @Sendable (_ messageId: String) async throws -> MessageResponse
   //  let deleteMessage: (_ messageId: String) async throws -> Void
 }
 
@@ -49,16 +47,78 @@ extension ChatServices: DependencyKey {
         .rpc("insert_message", params: ["params": message])
         .execute()
         .value
+    }, subscribeToInsertions: { id in
+      return AsyncStream { continuation in
+        let channel = SupabaseManager.shared.client.realtimeV2.channel("messages:\(id)")
+        let insertions = channel.postgresChange(InsertAction.self, schema: "public", table: "messages", filter: .eq("conversation_id", value: id))
+        
+        
+        Task {
+          try await channel.subscribeWithError()
+          
+          for await insert in insertions {
+            print(insert.record)
+//            if let messageId = insert.record["id"]?.stringValue, id.isEmpty {
+//              continue
+//            }
+            guard let messageId = insert.record["id"]?.stringValue else {
+              continue
+            }
+            guard let role = insert.record["role"]?.stringValue, role != "user" else {
+              continue
+            }
+            
+            let message: MessageResponse = try await SupabaseManager.shared.client.from("messages")
+              .select(
+                """
+                id,
+                conversation_id,
+                role,
+                content,
+                metadata,
+                created_at,
+                user_id,
+                agent_id,
+                agent:agents(id, name)
+                """
+              )
+              .eq("id", value: messageId)
+              .single()
+              .execute()
+              .value
+            continuation.yield((message, channel.status))
+          }
+        }
+        
+        continuation.onTermination = { _ in
+          Task {
+            continuation.yield((nil,  channel.status))
+            await channel.unsubscribe()
+            continuation.yield((nil,  channel.status))
+          }
+        }
+      }
+    }, fetchMessage: { id in
+      let message: MessageResponse = try await SupabaseManager.shared.client.from("messages")
+        .select(
+          """
+          id,
+          conversation_id,
+          role,
+          content,
+          metadata,
+          created_at,
+          user_id,
+          agent_id,
+          agent:agents(id, name, description, avatar)
+          """
+        )
+        .single()
+        .execute()
+        .value
+      return message
     }
-//    , fetchMessages: { channelId in
-//      try await SupabaseManager.shared.client
-//        .from("messages")
-//        .select()
-//        .eq("channel_id", value: channelId)
-//        .order("created_at", ascending: true)
-//        .execute()
-//        .value
-//    }, subscribeToMessages: { channelId in
+//    ,subscribeToMessages: { channelId in
 //      return AsyncStream { continuation in
 //        
 //        let channel = SupabaseManager.shared.client.channel(channelId)

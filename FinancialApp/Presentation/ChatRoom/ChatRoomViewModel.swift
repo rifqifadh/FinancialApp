@@ -7,6 +7,7 @@
 import Observation
 import Dependencies
 import Foundation
+import Realtime
 
 @MainActor
 @Observable final class ChatRoomViewModel {
@@ -17,9 +18,10 @@ import Foundation
   @Dependency(\.profileService) private var profileService
   
   var chatMessagesState: ViewState<[Message]> = .idle
-  var id: Int
+  var id: String
+  var channelStatus: RealtimeChannelStatus?
   
-  init(id: Int) {
+  init(id: String) {
     self.id = id
   }
   
@@ -128,33 +130,43 @@ import Foundation
   }
   
   func subscribeToMessages() async {
-//    for await (message, status) in chatServices.subscribeToMessagesWithStatus(id) {
-//      if let status = status {
-//        print("Channel subscription status: \(status)")
-//        //          if status == .subscribed {
-//        //            isLoading = false
-//        //          }
-//      }
-//      
-//      if let message {
-//        if message.role != "user" {
-//          var data = chatMessagesState.getData() ?? []
-//          data.append(message.toMessage())
-//          chatMessagesState = .success(data)
-//        }
-//      }
-//    }
+    for await (message, status) in chatServices.subscribeToInsertions(id) {
+      channelStatus = status
+      
+      if let message {
+        if message.role != "user" {
+          var data = chatMessagesState.getData() ?? []
+          data.append(message.toMessage())
+          chatMessagesState = .success(data)
+        }
+      }
+    }
   }
 
 }
 
 extension MessageResponse {
   func toMessage(status: Message.Status = .sent) -> Message {
-    Message(
+    if (role == "n8n-agent") {
+      return self.toAgentMessage()
+    }
+    return Message(
       id: self.id,
-      user: .init(id: id, name: "-", avatarURL: nil, type: self.role == "user" ? .current : .other),
+      user: .init(id: id, name: "", avatarURL: nil, type: self.role == "user" ? .current : .other),
       status: status,
       text: self.content,
+    )
+  }
+}
+
+extension MessageResponse {
+  func toAgentMessage() -> Message {
+    return Message(
+      id: self.id,
+      user: .init(id: self.agent?.id ?? "", name: self.agent?.name ?? "O", avatarURL: nil, type: .other),
+      status: .read,
+      createdAt: self.createdAt ?? Date(),
+      text: self.content
     )
   }
 }

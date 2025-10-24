@@ -10,5 +10,6 @@ enum RouterDestination: Hashable {
   case accountDetail(id: String)
   case investments
   case investmentDetail(id: String)
-  case chatRoom(id: Int)
+  case chatRoom(id: String)
+  case transactions
 }

@@ -153,12 +153,12 @@ struct InvestmentsView: View {
   private var investmentsSection: some View {
     VStack(spacing: AppTheme.Spacing.sm) {
       ForEach(viewModel.filteredInvestments) { investment in
-        NavigationLink(value: AppRouter.investmentDetail(id: investment.id)) {
+//        NavigationLink(value: AppRouter.investmentDetail(id: investment.id)) {
           InvestmentCard(investment: investment)
           //          .onTapGesture {
           //            appNavigation.push(.investmentDetail(id: investment.id))
           //          }
-        }
+//        }
       }
     }
     .padding(.horizontal)

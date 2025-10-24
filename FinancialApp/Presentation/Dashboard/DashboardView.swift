@@ -109,6 +109,7 @@ struct DashboardView: View {
           color: Color.orange
         ) {
           // Navigate to transactions - handled by tab
+          routerPath.navigate(to: .transactions)
         }
         
         // Reports

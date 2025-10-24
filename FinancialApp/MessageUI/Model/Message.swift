@@ -45,7 +45,7 @@ struct Message: Identifiable, Equatable, Sendable, Hashable {
   }
   
   public var id: String
-  public var user: User
+  public var user: UserDataMessage
   public var status: Status?
   public var createdAt: Date
   
@@ -59,7 +59,7 @@ struct Message: Identifiable, Equatable, Sendable, Hashable {
   public var triggerRedraw: UUID?
   
   public init(id: String,
-              user: User,
+              user: UserDataMessage,
               status: Status? = nil,
               createdAt: Date = Date(),
               text: String = "",
@@ -82,20 +82,6 @@ struct Message: Identifiable, Equatable, Sendable, Hashable {
   }
 }
 
-extension MessageResponse {
-  func toMessage(currentUserId: String) -> Message {
-    return Message(
-      id: id,
-      user: .init(id: id, name: "-", avatarURL: nil, type: self.role == "user" ? .current : .other),
-      status: .read,
-      createdAt: self.createdAt ?? Date(),
-      text: self.content,
-      attachments: []
-      
-    )
-  }
-}
-
 extension Message {
   var time: String {
     DateFormatter.timeFormatter.string(from: createdAt)
@@ -113,7 +99,7 @@ public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
   }
   
   public var id: String
-  public var user: User
+  public var user: UserDataMessage
   public var createdAt: Date
   
   public var text: String
@@ -121,7 +107,7 @@ public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
   //    public var recording: Recording?
   
   public init(id: String,
-              user: User,
+              user: UserDataMessage,
               createdAt: Date,
               text: String = "",
               attachments: [Attachment] = []
