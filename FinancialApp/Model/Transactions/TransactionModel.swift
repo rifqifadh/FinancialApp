@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TransactionModel: Codable {
+struct TransactionModel: Codable, Equatable, Identifiable {
   let id: UUID
   let createdAt: String
   let description: String

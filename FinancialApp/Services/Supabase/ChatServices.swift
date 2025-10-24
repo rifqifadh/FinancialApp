@@ -11,8 +11,8 @@ import Foundation
 
 struct ChatServices: Sendable {
   let fetchConversations: @Sendable () async throws -> [ConversationResponse]
-  let fetchMessages: @Sendable (_ id: String) async throws -> BaseResponse<[MessageResponse]>
-//  let sendMessage: @Sendable (MessageParams) async throws -> BaseResponse<MessageResponse>
+  let fetchMessages: @Sendable (_ conversationId: Int) async throws -> BaseResponse<[MessageResponse]>
+  let sendMessage: @Sendable (MessageParams) async throws -> BaseResponse<MessageResponse>
 //  let fetchMessages: @Sendable (_ channelId: String) async throws -> [MessageResponse]
   //  let generateChannel: (_ userId: String) async throws -> ChatChannelResponse
 //    let subscribeToMessages: @Sendable (_ channelId: String) -> AsyncStream<MessageResponse>
@@ -35,22 +35,22 @@ extension ChatServices: DependencyKey {
       } catch {
         throw error
       }
-    }, fetchMessages: { id in
+    }, fetchMessages: { conversationId in
       do {
-        let res: BaseResponse<[MessageResponse]> = try await SupabaseManager.shared.client.rpc("get_messages_paginated", params: ["args": ["conversation_id": 1]])
+        let res: BaseResponse<[MessageResponse]> = try await SupabaseManager.shared.client.rpc("get_messages_paginated", params: ["args": ["conversation_id": conversationId]])
           .execute()
           .value
         return res
       } catch {
         throw error
       }
+    }, sendMessage: { message in
+      try await SupabaseManager.shared.client
+        .rpc("insert_message", params: ["params": message])
+        .execute()
+        .value
     }
-//    }, sendMessage: { message in
-//      try await SupabaseManager.shared.client
-//        .rpc("insert_message", params: ["params": message])
-//        .execute()
-//        .value
-//    }, fetchMessages: { channelId in
+//    , fetchMessages: { channelId in
 //      try await SupabaseManager.shared.client
 //        .from("messages")
 //        .select()

@@ -102,7 +102,7 @@ final class AccountDetailViewModel {
           let allTransactions = try await transactionService.fetchAll(.init(month: Date.now))
 
           transactions = allTransactions.data
-            transactionsStateView = transactions.isEmpty ? .empty : .success(transactions)
+            transactionsStateView = .success(transactions)
         } catch {
             let errorMessage = "Failed to load transactions: \(error.localizedDescription)"
             self.errorMessage = errorMessage

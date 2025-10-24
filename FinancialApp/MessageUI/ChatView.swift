@@ -160,6 +160,7 @@ struct ChatView<MessageContent: View, MenuAction: MessageMenuAction>: View {
       ids: ids,
       listSwipeActions: listSwipeActions
     )
+    .id(ids)
     .applyIf(!isScrollEnabled) {
       $0.frame(height: tableContentHeight)
     }

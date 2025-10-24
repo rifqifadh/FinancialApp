@@ -55,7 +55,8 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
     tableView.dataSource = context.coordinator
     tableView.delegate = context.coordinator
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.transform = CGAffineTransform(rotationAngle: (type == .conversation ? .pi : 0))
+    tableView.transform = CGAffineTransform(rotationAngle: (type == .conversation ? .pi : 0))
+    tableView.bouncesVertically = false
 //    tableView.transform = CGAffineTransform(rotationAngle: 0)
     
     tableView.showsVerticalScrollIndicator = false

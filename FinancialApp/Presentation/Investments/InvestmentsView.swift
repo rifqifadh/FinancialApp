@@ -9,10 +9,13 @@ struct InvestmentsView: View {
   var body: some View {
     ViewStateView(state: viewModel.investmentStateView) { state in
       ScrollView {
-        content
+        if state.isEmpty {
+          emptyStateView
+        } else {
+          
+          content
+        }
       }
-    } emptyView: {
-      emptyStateView
     }
     .background(AppTheme.Colors.background)
     .navigationTitle("Investments")

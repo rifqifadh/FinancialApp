@@ -15,10 +15,10 @@
 
 import Foundation
 
-struct MessageResponse: Codable {
+struct MessageResponse: Codable, Equatable {
   let id: String
   let createdAt: Date?
-  let conversationId: String?
+  let conversationId: Int?
   let role: String?
   let content: String
   let metadata: String?
@@ -27,7 +27,7 @@ struct MessageResponse: Codable {
   
   init(id: String,
        createdAt: Date?,
-       conversationId: String? = nil,
+       conversationId: Int? = nil,
        role: String? = nil,
        content: String,
        metadata: String? = nil,

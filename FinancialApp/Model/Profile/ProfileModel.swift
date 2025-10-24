@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProfileModel: Identifiable, Codable, Sendable {
+struct ProfileModel: Identifiable, Codable, Sendable, Equatable {
   let id: String
   let email: String?
   let fullName: String?

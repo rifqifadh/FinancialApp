@@ -9,7 +9,7 @@ import Supabase
 import Foundation
 import Dependencies
 
-struct DashboardSummary: Codable, Sendable {
+struct DashboardSummary: Codable, Sendable, Equatable {
   let totalIncome: Double
   let totalExpense: Double
 //  let totalAsset: Double

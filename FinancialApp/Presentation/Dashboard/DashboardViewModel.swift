@@ -21,11 +21,8 @@ import Dependencies
     do {
       summaryState = .loading
       let summary = try await dashboardServices.fetchSummary()
-      if summary.data == nil {
-        summaryState = .empty
-      } else {
+      
         summaryState = .success(summary.data!)
-      }
     } catch {
       summaryState = .error(error)
     }

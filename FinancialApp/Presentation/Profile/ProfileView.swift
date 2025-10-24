@@ -32,13 +32,13 @@ struct ProfileView: View {
           }
           .background(AppTheme.Colors.background)
         },
-        emptyView: {
-          ContentUnavailableView(
-            "No Profile",
-            systemImage: "person.slash",
-            description: Text("Unable to load your profile")
-          )
-        },
+//        emptyView: {
+//          ContentUnavailableView(
+//            "No Profile",
+//            systemImage: "person.slash",
+//            description: Text("Unable to load your profile")
+//          )
+//        },
         errorView: { error in
           DefaultErrorView(error: error)
         },

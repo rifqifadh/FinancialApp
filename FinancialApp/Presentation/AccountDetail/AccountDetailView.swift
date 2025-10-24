@@ -247,8 +247,6 @@ struct AccountDetailView: View {
         } else {
           transactionsList
         }
-      } emptyView: {
-        emptyTransactionsView
       }
     }
     .padding(.horizontal)

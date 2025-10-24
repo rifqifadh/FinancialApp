@@ -47,8 +47,6 @@ final class ProfileViewModel {
       if let profile = try await profileService.getCurrentUser() {
         self.profile = profile
         profileState = .success(profile)
-      } else {
-        profileState = .empty
       }
     } catch {
       let errorMessage = "Failed to load profile: \(error.localizedDescription)"

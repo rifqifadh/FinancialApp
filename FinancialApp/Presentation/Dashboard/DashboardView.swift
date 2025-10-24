@@ -26,6 +26,9 @@ struct DashboardView: View {
       }
       .padding(.vertical)
     }
+    .refreshable {
+      await viewModel.loadSummary()
+    }
     .task {
       if isFirstLoad {
         await viewModel.loadSummary()
@@ -56,8 +59,8 @@ struct DashboardView: View {
   private var financialOverviewCard: some View {
     ViewStateView(state: viewModel.summaryState) { data in
       FinancialOverviewCard(totalAssets: 1000000, totalIncome: data.totalIncome, totalExpense: data.totalExpense)
-    } emptyView: {
-      FinancialOverviewCard.empty()
+//    } emptyView: {
+//      FinancialOverviewCard.empty()
     } loadingView: {
       FinancialOverviewCard.empty().redacted(reason: .placeholder)
     } errorView: { _ in

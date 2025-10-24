@@ -66,7 +66,7 @@ final class AccountsViewModel {
     do {
       let accounts = try await accountService.fetchAll()
       self.accounts = accounts
-      accountStateView = accounts.isEmpty ? .empty : .success(accounts)
+      accountStateView = .success(accounts)
     } catch {
       let errorMessage = "Failed to load accounts: \(error.localizedDescription)"
       self.errorMessage = errorMessage

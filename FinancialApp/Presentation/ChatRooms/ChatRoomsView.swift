@@ -35,7 +35,7 @@ struct ChatRoomsView: View {
           ForEach(filteredChatRooms, id: \.id) { room in
             ChatRoomCard(room: room) {
               // Handle tap - navigate to chat detail
-              routerPath.navigate(to: .chatRoom(id: "\(room.id)"))
+              routerPath.navigate(to: .chatRoom(id: room.id))
             }
           }
         }

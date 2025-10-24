@@ -112,7 +112,7 @@ final class InvestmentDetailViewModel {
         do {
             let transactions = try await transactionService.fetchAll(investmentId)
             self.transactions = transactions
-            transactionsStateView = transactions.isEmpty ? .empty : .success(transactions)
+            transactionsStateView = .success(transactions)
         } catch {
             let errorMessage = "Failed to load transactions: \(error.localizedDescription)"
             self.errorMessage = errorMessage

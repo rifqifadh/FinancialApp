@@ -8,32 +8,25 @@
 import Foundation
 
 struct MessageParams: Encodable {
-  let userId: String
-  let channelId: String
-  let name: String
-  let avatarUrl: String?
-  let content: String
+  let conversationId: Int
   let role: Role
-  let createdAt: Date
+  let content: String
+  let userId: String
   
   enum Role: String, Sendable, Encodable {
     case user
   }
   
   enum CodingKeys: String, CodingKey {
-    case userId, name, content, role
-    case channelId = "channel_id"
-    case avatarUrl = "avatar_url"
-    case createdAt = "created_at"
+    case role, content
+    case conversationId = "conversation_id"
+    case userId = "user_id"
   }
   
-  init(userId: String, channelId: String, name: String, avatarUrl: String? = nil, content: String, role: Role = .user, createdAt: Date = .init()) {
-    self.userId = userId
-    self.channelId = channelId
-    self.name = name
-    self.avatarUrl = avatarUrl
-    self.content = content
+  init(conversationId: Int, role: Role, content: String, userId: String) {
+    self.conversationId = conversationId
     self.role = role
-    self.createdAt = createdAt
+    self.content = content
+    self.userId = userId
   }
 }
