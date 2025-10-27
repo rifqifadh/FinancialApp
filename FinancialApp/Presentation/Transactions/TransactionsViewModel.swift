@@ -146,4 +146,14 @@ final class TransactionsViewModel {
 //    try? await Task.sleep(nanoseconds: 1_000_000_000) // Simulate network delay
     await loadTransactions()
   }
+
+  func deleteTransaction(_ transaction: TransactionModel) async {
+    do {
+      try await transactionService.deleteById(transaction.id)
+      // Remove from local array
+      transactions.removeAll { $0.id == transaction.id }
+    } catch {
+      print("Failed to delete transaction: \(error.localizedDescription)")
+    }
+  }
 }

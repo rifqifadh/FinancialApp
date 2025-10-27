@@ -13,11 +13,9 @@ struct TransactionView: View {
   
   // MARK: - Body
   var body: some View {
-    
       ZStack {
         AppTheme.Colors.background
           .ignoresSafeArea()
-
         
           transactionsList
       }
@@ -87,7 +85,7 @@ struct TransactionView: View {
           availableCategories: viewModel.availableCategories
         )
       }
-      .searchable(text: $viewModel.searchText)
+      .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always))
   }
   
   // MARK: - Summary Card
@@ -152,45 +150,54 @@ struct TransactionView: View {
   
   // MARK: - Transactions List
   private var transactionsList: some View {
-    ScrollView {
-      VStack(spacing: AppTheme.Spacing.md) {
-        // Summary Card
-        summaryCard
-          .padding(.horizontal, AppTheme.Spacing.lg)
-
-        // Filter Bar & Type Tabs
-        HStack(alignment: .center, spacing: AppTheme.Spacing.sm) {
-          filterBar
-          transactionTypeTabs
-        }
+    VStack(spacing: 0) {
+      // Summary Card
+      summaryCard
         .padding(.horizontal, AppTheme.Spacing.lg)
+        .padding(.top, AppTheme.Spacing.sm)
 
-        if viewModel.filteredTransactions.isEmpty {
-          emptyState
-        } else {
-          // Transaction List
-          LazyVStack(spacing: AppTheme.Spacing.md, pinnedViews: [.sectionHeaders]) {
-            ForEach(viewModel.groupedTransactions, id: \.0) { date, transactions in
-              Section {
-                VStack(spacing: AppTheme.Spacing.sm) {
-                  ForEach(transactions, id: \.id) { transaction in
-                    TransactionCard(transaction: transaction)
+      // Filter Bar & Type Tabs
+      HStack(alignment: .center, spacing: AppTheme.Spacing.sm) {
+        filterBar
+        transactionTypeTabs
+      }
+      .padding(.horizontal, AppTheme.Spacing.lg)
+      .padding(.vertical, AppTheme.Spacing.md)
+
+      if viewModel.filteredTransactions.isEmpty {
+        emptyState
+      } else {
+        // Transaction List
+        List {
+          ForEach(viewModel.groupedTransactions, id: \.0) { date, transactions in
+            Section {
+              ForEach(transactions, id: \.id) { transaction in
+                TransactionCard(transaction: transaction)
+                  .listRowInsets(EdgeInsets(top: AppTheme.Spacing.xs, leading: AppTheme.Spacing.lg, bottom: AppTheme.Spacing.xs, trailing: AppTheme.Spacing.lg))
+                  .listRowBackground(Color.clear)
+                  .listRowSeparator(.hidden)
+                  .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                      Task {
+                        await viewModel.deleteTransaction(transaction)
+                      }
+                    } label: {
+                      Label("Delete", systemImage: "trash")
+                    }
                   }
-                }
-              } header: {
-                sectionHeader(
-                  date: date,
-                  income: transactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount },
-                  expenses: transactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
-                )
               }
+            } header: {
+              sectionHeader(
+                date: date,
+                income: transactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount },
+                expenses: transactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
+              )
             }
           }
-          .padding(.horizontal, AppTheme.Spacing.lg)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
       }
-      .padding(.top, AppTheme.Spacing.sm)
-      .padding(.bottom, AppTheme.Spacing.xl)
     }
   }
   
@@ -258,13 +265,27 @@ struct TransactionView: View {
   }
 }
 
-// MARK: - Preview
-#Preview("Light Mode") {
-  TransactionView()
-    .preferredColorScheme(.light)
+struct CustomRowView: View {
+    var text: String
+    var body: some View {
+        HStack {
+            Image(systemName: "star.fill")
+                .foregroundColor(.yellow)
+            Text(text)
+        }
+        .padding()
+        .background(Color.blue.opacity(0.2))
+        .cornerRadius(8)
+    }
 }
 
-#Preview("Dark Mode") {
-  TransactionView()
-    .preferredColorScheme(.dark)
-}
+// MARK: - Preview
+//#Preview("Light Mode") {
+//  TransactionView()
+//    .preferredColorScheme(.light)
+//}
+//
+//#Preview("Dark Mode") {
+//  TransactionView()
+//    .preferredColorScheme(.dark)
+//}
