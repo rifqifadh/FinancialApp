@@ -2,10 +2,15 @@ import SwiftUI
 
 struct AccountDetailView: View {
   let accountId: String
-  @State private var viewModel = AccountDetailViewModel()
+  @State private var viewModel: AccountDetailViewModel
   @State private var showCopiedAlert = false
   @State private var copiedText = ""
   @Environment(\.dismiss) private var dismiss
+  
+  init(accountId: String) {
+    self.accountId = accountId
+    viewModel = AccountDetailViewModel(id: accountId)
+  }
   
   var body: some View {
     ScrollView {

@@ -13,8 +13,8 @@ struct CreateAccountParams: Codable, Sendable {
     let category: String
     let currency: String
     let accountNumber: String
-    let initialBalance: Int
-    let finalBalance: Int?
+    let initialBalance: Double
+    let finalBalance: Double?
 
     enum CodingKeys: String, CodingKey {
         case name

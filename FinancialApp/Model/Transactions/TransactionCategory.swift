@@ -9,12 +9,18 @@ import Foundation
 
 struct TransactionCategory: Codable, Hashable {
   let id: Int
-  let iconName: String
+  let iconName: String?
   let name: String
   
   enum CodingKeys: String, CodingKey {
     case id
     case iconName = "icon_name"
     case name
+  }
+  
+  init(id: Int, iconName: String?, name: String) {
+    self.id = id
+    self.iconName = iconName
+    self.name = name
   }
 }

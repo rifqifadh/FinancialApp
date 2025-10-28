@@ -57,7 +57,7 @@ struct InputView: View {
       )
       .autocorrectionDisabled()
     }
-    .padding(.horizontal)
+    .padding(.horizontal, 8)
     .frame(minHeight: 48)
   }
   

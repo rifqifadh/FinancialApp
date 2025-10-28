@@ -29,11 +29,11 @@ struct AppView: View {
             }
           }
           
-          Tab("Transactions", systemImage: "dollarsign.circle", value: .transactions) {
-            NavigationTab {
-              TransactionView()
-            }
-          }
+//          Tab("Transactions", systemImage: "dollarsign.circle", value: .transactions) {
+//            NavigationTab {
+//              TransactionView()
+//            }
+//          }
           
           Tab("Profile", systemImage: "person.crop.circle", value: .profile) {
             NavigationTab {

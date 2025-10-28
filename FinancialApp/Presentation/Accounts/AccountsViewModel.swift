@@ -40,7 +40,7 @@ final class AccountsViewModel {
     Dictionary(grouping: filteredAccounts, by: { $0.category })
   }
   
-  var totalBalance: Int {
+  var totalBalance: Double {
     filteredAccounts.reduce(0) { $0 + $1.finalBalance }
   }
   
@@ -53,7 +53,7 @@ final class AccountsViewModel {
     return AccountCategory.allCases.filter { uniqueCategories.contains($0) }
   }
   
-  var categoryBalances: [AccountCategory: Int] {
+  var categoryBalances: [AccountCategory: Double] {
     Dictionary(grouping: accounts, by: { $0.category })
       .mapValues { accounts in
         accounts.reduce(0) { $0 + $1.finalBalance }

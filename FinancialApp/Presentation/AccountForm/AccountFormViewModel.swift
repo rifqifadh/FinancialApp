@@ -20,8 +20,8 @@ final class AccountFormViewModel {
   var selectedCategory: AccountCategory = .bank
   var accountNumber: String = ""
   var currency: String = "IDR"
-  var initialBalance: Int = 0
-  var balance: Int = 0
+  var initialBalance: Double = 0
+  var balance: Double = 0
 
   // MARK: - State
   var isSaving = false

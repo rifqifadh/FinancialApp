@@ -7,9 +7,9 @@ struct AccountModel: Identifiable, Codable, Sendable, Equatable {
   let category: AccountCategory
   let currency: String
   let createdAt: Date?
-  let finalBalance: Int
+  let finalBalance: Double
   let accountNumber: String?
-  let initialBalance: Int
+  let initialBalance: Double
   var updatedAt: Date? = nil
   
   enum CodingKeys: String, CodingKey {
@@ -26,11 +26,11 @@ struct AccountModel: Identifiable, Codable, Sendable, Equatable {
   }
   
   // Computed properties
-  var balance: Int {
+  var balance: Double {
     finalBalance
   }
   
-  var balanceChange: Int {
+  var balanceChange: Double {
     finalBalance - initialBalance
   }
   

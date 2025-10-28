@@ -34,5 +34,6 @@ struct ChatRoomView: View {
     }
     .navigationTitle("Chat Room")
     .navigationBarTitleDisplayMode(.inline)
+    .toolbarVisibility(.hidden, for: .tabBar)
   }
 }

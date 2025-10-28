@@ -2,7 +2,7 @@ import Foundation
 
 struct AccountResponse: Codable, Sendable {
     let accounts: [AccountModel]
-    let totalBalance: Int?
+    let totalBalance: Double?
 
     enum CodingKeys: String, CodingKey {
         case accounts
@@ -17,7 +17,7 @@ struct AccountResponse: Codable, Sendable {
         accounts.count
     }
 
-    var calculatedTotalBalance: Int {
+    var calculatedTotalBalance: Double {
         accounts.reduce(0) { $0 + $1.finalBalance }
     }
 }

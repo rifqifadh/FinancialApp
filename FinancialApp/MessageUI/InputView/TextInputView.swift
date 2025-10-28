@@ -20,7 +20,6 @@ struct TextInputView: View {
       .customFocus($globalFocusState.focus, equals: .uuid(inputFieldId))
       .placeholder(when: text.isEmpty) {
         Text("Type a message...")
-          .padding(.horizontal, 6)
           .foregroundStyle(theme.colors.inputPlaceholderText)
       }
       .foregroundStyle(theme.colors.inputText)

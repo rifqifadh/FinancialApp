@@ -99,9 +99,9 @@ struct AccountCardCompact: View {
 
 // MARK: - Account Summary Card
 struct AccountSummaryCard: View {
-  let totalBalance: Int
+  let totalBalance: Double
   let accountCount: Int
-  let categoryBreakdown: [AccountCategory: Int]
+  let categoryBreakdown: [AccountCategory: Double]
   
   var body: some View {
     VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
@@ -129,39 +129,6 @@ struct AccountSummaryCard: View {
             .foregroundStyle(AppTheme.Colors.accent)
         }
       }
-      
-      // Category Breakdown
-      //            if !categoryBreakdown.isEmpty {
-      //                Divider()
-      //                    .background(AppTheme.Colors.divider)
-      //
-      //                VStack(spacing: AppTheme.Spacing.sm) {
-      //                    ForEach(Array(categoryBreakdown.keys.sorted(by: { categoryBreakdown[$0]! > categoryBreakdown[$1]! })), id: \.self) { category in
-      //                        if let balance = categoryBreakdown[category] {
-      //                            HStack {
-      //                                Image(systemName: category.icon)
-      //                                    .font(.system(size: 14))
-      //                                    .foregroundStyle(AppTheme.Colors.accentColor)
-      //                                    .frame(width: 20)
-      //
-      //                                Text(category.displayName)
-      //                                    .font(AppTheme.Typography.caption)
-      //                                    .foregroundStyle(AppTheme.Colors.secondaryText)
-      //
-      //                                Spacer()
-      //
-      //                                Text(balance.toCurrency())
-      //                                    .font(AppTheme.Typography.caption.weight(.semibold))
-      //                                    .foregroundStyle(AppTheme.Colors.primaryText)
-      //
-      //                                Text("(\(Int((Double(balance) / Double(totalBalance)) * 100))%)")
-      //                                    .font(AppTheme.Typography.caption)
-      //                                    .foregroundStyle(AppTheme.Colors.tertiaryText)
-      //                            }
-      //                        }
-      //                    }
-      //                }
-      //            }
     }
     .padding(AppTheme.Spacing.lg)
     .background(AppTheme.Colors.cardBackground)

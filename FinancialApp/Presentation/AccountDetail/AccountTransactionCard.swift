@@ -14,9 +14,11 @@ struct AccountTransactionCard: View {
                             .fill(transactionColor.opacity(0.1))
                             .frame(width: 44, height: 44)
 
-                        Image(systemName: category.iconName)
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(transactionColor)
+                      if let iconName = category.iconName {
+                        Image(systemName: iconName)
+                          .font(.system(size: 18, weight: .semibold))
+                          .foregroundStyle(transactionColor)
+                      }
                     }
                 }
 

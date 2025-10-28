@@ -11,7 +11,7 @@ struct UpdateAccountParams: Codable, Sendable {
   let category: String
   let currency: String
   let accountNumber: String
-  let finalBalance: Int?
+  let finalBalance: Double?
   
   enum CodingKeys: String, CodingKey {
     case id = "account_id"

@@ -102,7 +102,9 @@ struct TransactionFilterSheet: View {
               isPresented = false
             }) {
               HStack {
-                Image(systemName: category.iconName)
+                if let iconName = category.iconName {
+                  Image(systemName: iconName)
+                }
                 Text(category.name)
                   .foregroundColor(AppTheme.Colors.primaryText)
                 Spacer()

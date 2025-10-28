@@ -21,7 +21,7 @@ struct NavigationTab<Content: View>: View {
     NavigationStack(path: $routerPath.path) {
       content()
         .withNavigationDestination()
-        .toolbarVisibility(routerPath.path.isEmpty ? .visible : .hidden, for: .tabBar)
+//        .toolbarVisibility(routerPath.path.isEmpty ? .visible : .hidden, for: .tabBar)
     }
     .environment(routerPath)
   }
