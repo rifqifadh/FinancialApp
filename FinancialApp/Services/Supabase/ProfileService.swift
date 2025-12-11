@@ -48,23 +48,23 @@ extension ProfileService: DependencyKey {
       return ProfileModel(
         id: session.user.id.uuidString,
         email: session.user.email,
-        fullName: session.user.userMetadata["full_name"] as? String,
-        avatarUrl: session.user.userMetadata["avatar_url"] as? String,
+        fullName: session.user.userMetadata["full_name"]?.stringValue,
+        avatarUrl: session.user.userMetadata["avatar_url"]?.stringValue,
         createdAt: session.user.createdAt
       )
     },
     updateUserMetadata: { params in
       // Update user metadata in Supabase Auth
       let updatedUser = try await SupabaseManager.shared.client.auth.update(
-        user: UserAttributes(data: params.asDictionary as! [String : AnyJSON])
+        user: UserAttributes(data: params.asDictionary as? [String : AnyJSON])
       )
 
       // Return updated profile
       return ProfileModel(
         id: updatedUser.id.uuidString,
         email: updatedUser.email,
-        fullName: updatedUser.userMetadata["full_name"] as? String,
-        avatarUrl: updatedUser.userMetadata["avatar_url"] as? String,
+        fullName: updatedUser.userMetadata["full_name"]?.stringValue,
+        avatarUrl: updatedUser.userMetadata["avatar_url"]?.stringValue,
         createdAt: updatedUser.createdAt
       )
     },

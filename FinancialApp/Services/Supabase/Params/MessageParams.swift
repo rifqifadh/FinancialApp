@@ -12,6 +12,7 @@ struct MessageParams: Encodable {
   let role: Role
   let content: String
   let userId: String
+  let createdAt: Date?
   
   enum Role: String, Sendable, Encodable {
     case user
@@ -21,6 +22,7 @@ struct MessageParams: Encodable {
     case role, content
     case conversationId = "conversation_id"
     case userId = "user_id"
+    case createdAt = "created_at"
   }
   
   init(conversationId: String, role: Role, content: String, userId: String) {
@@ -28,5 +30,6 @@ struct MessageParams: Encodable {
     self.role = role
     self.content = content
     self.userId = userId
+    self.createdAt = Date()
   }
 }

@@ -3,100 +3,83 @@ import Foundation
 import Supabase
 
 struct InvestmentService: Sendable {
-    var fetchAll: @Sendable () async throws -> [InvestmentModel]
-    var fetchById: @Sendable (_ id: String) async throws -> InvestmentModel?
-    var create: @Sendable (_ params: CreateInvestmentParams) async throws -> Void
+    var fetchAll: @Sendable () async throws -> [InvestmentResponse]
+    var fetchById: @Sendable (_ id: String) async throws -> InvestmentResponse?
+    var create: @Sendable (_ params: InsertInvestmentParams) async throws -> Void
     var update: @Sendable (_ id: String, _ params: UpdateInvestmentParams) async throws -> Void
     var delete: @Sendable (_ id: String) async throws -> Void
     var updateCurrentValue: @Sendable (_ id: String, _ currentValue: Int) async throws -> Void
-}
-
-// MARK: - Request Parameters
-struct CreateInvestmentParams: Codable, Sendable {
-    let name: String
-    let type: String
-    let accountId: String?
-    let initialAmount: Int
-    let currentValue: Int
-    let purchaseDate: String
-    let maturityDate: String?
-    let interestRate: Double?
-    let units: Double?
-    let pricePerUnit: Int?
-    let notes: String?
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case type
-        case accountId = "account_id"
-        case initialAmount = "initial_amount"
-        case currentValue = "current_value"
-        case purchaseDate = "purchase_date"
-        case maturityDate = "maturity_date"
-        case interestRate = "interest_rate"
-        case units
-        case pricePerUnit = "price_per_unit"
-        case notes
-    }
-}
-
-struct UpdateInvestmentParams: Codable, Sendable {
-    let name: String?
-    let type: String?
-    let accountId: String?
-    let currentValue: Int?
-    let maturityDate: String?
-    let interestRate: Double?
-    let units: Double?
-    let pricePerUnit: Int?
-    let notes: String?
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case type
-        case accountId = "account_id"
-        case currentValue = "current_value"
-        case maturityDate = "maturity_date"
-        case interestRate = "interest_rate"
-        case units
-        case pricePerUnit = "price_per_unit"
-        case notes
-    }
 }
 
 // MARK: - Dependency Key
 extension InvestmentService: DependencyKey {
     static let liveValue = InvestmentService(
         fetchAll: {
-            let userId = try await SupabaseManager.shared.client.auth.user().id.uuidString
-//            let investments: [InvestmentModel] = try await SupabaseManager.shared.client
-//                .from("investments")
-//                .select()
-//                .eq("user_id", value: userId)
-//                .order("purchase_date", ascending: false)
-//                .execute()
-//                .value
-          return InvestmentModel.mockInvestments
+            // Use the custom RPC function to get investments with account names
+            let investments: [InvestmentResponse] = try await SupabaseManager.shared.client
+                .rpc("get_user_investments")
+                .execute()
+                .value
+            return investments
         },
         fetchById: { id in
-//            let investments: [InvestmentModel] = try await SupabaseManager.shared.client
-//                .from("investments")
-//                .select()
-//                .eq("id", value: id)
-//                .execute()
-//                .value
-          return InvestmentModel.mockInvestments.first { $0.id == id }
+            let investments: [InvestmentResponse] = try await SupabaseManager.shared.client
+                .from("investments")
+                .select()
+                .eq("id", value: id)
+                .execute()
+                .value
+            return investments.first
         },
         create: { params in
-            try await SupabaseManager.shared.client
-                .rpc("insert_investment", params: params)
+            // Wrap params in a "params" key as expected by the JSONB function
+            let wrappedParams = ["params": params]
+
+            let _: String = try await SupabaseManager.shared.client
+                .rpc("insert_investment", params: wrappedParams)
                 .execute()
+                .value
         },
         update: { id, params in
-            var updateParams = params
+            struct UpdateParams: Codable {
+                let name: String?
+                let type: String?
+                let accountId: String?
+                let currentValue: String?
+                let maturityDate: String?
+                let interestRate: Double?
+                let units: Double?
+                let pricePerUnit: String?
+                let notes: String?
+
+                enum CodingKeys: String, CodingKey {
+                    case name
+                    case type
+                    case accountId = "account_id"
+                    case currentValue = "current_value"
+                    case maturityDate = "maturity_date"
+                    case interestRate = "interest_rate"
+                    case units
+                    case pricePerUnit = "price_per_unit"
+                    case notes
+                }
+            }
+
+            let updateData = UpdateParams(
+                name: params.name,
+                type: params.type,
+                accountId: params.accountId,
+                currentValue: params.currentValue.map { String($0) },
+                maturityDate: params.maturityDate,
+                interestRate: params.interestRate,
+                units: params.units,
+                pricePerUnit: params.pricePerUnit.map { String($0) },
+                notes: params.notes
+            )
+
             try await SupabaseManager.shared.client
                 .from("investments")
-                .update(updateParams)
+                .update(updateData)
                 .eq("id", value: id)
                 .execute()
         },
@@ -126,10 +109,10 @@ extension InvestmentService: DependencyKey {
 
     static let testValue = InvestmentService(
         fetchAll: {
-            InvestmentModel.mockInvestments
+          InvestmentResponse.mockInvestments
         },
         fetchById: { id in
-            InvestmentModel.mockInvestments.first { $0.id == id }
+            InvestmentResponse.mockInvestments.first { $0.id == id }
         },
         create: { _ in },
         update: { _, _ in },

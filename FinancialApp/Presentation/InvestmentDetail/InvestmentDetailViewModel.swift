@@ -12,7 +12,7 @@ final class InvestmentDetailViewModel {
     @Dependency(\.investmentTransactionService) var transactionService
 
     // MARK: - State
-    var investment: InvestmentModel?
+    var investment: InvestmentResponse?
     var transactions: [InvestmentTransactionModel] = []
     var isLoading = false
     var errorMessage: String?
@@ -66,7 +66,7 @@ final class InvestmentDetailViewModel {
     }
 
     var unrealizedProfit: Int {
-        guard let investment = investment else { return 0 }
+      guard investment != nil else { return 0 }
         let currentValueOfHoldings = Int(currentHoldingUnits * Double(currentPrice))
         let costBasis = Int(currentHoldingUnits * Double(averageBuyPrice))
         return currentValueOfHoldings - costBasis
@@ -139,7 +139,7 @@ final class InvestmentDetailViewModel {
         }
     }
 
-    func recalculateInvestmentValue(_ investment: InvestmentModel) async {
+    func recalculateInvestmentValue(_ investment: InvestmentResponse) async {
         // For stocks, calculate current value based on holdings
         if investment.type == .stocks || investment.type == .reksaDanaSaham {
             let newValue = Int(currentHoldingUnits * Double(currentPrice))

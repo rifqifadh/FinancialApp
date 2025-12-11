@@ -72,7 +72,7 @@ struct InvestmentDetailView: View {
   }
   
   // MARK: - Investment Header Card
-  private func investmentHeaderCard(_ investment: InvestmentModel) -> some View {
+  private func investmentHeaderCard(_ investment: InvestmentResponse) -> some View {
     VStack(spacing: AppTheme.Spacing.md) {
       HStack {
         // Icon
@@ -178,7 +178,7 @@ struct InvestmentDetailView: View {
   }
   
   // MARK: - Overview Tab
-  private func overviewTab(_ investment: InvestmentModel) -> some View {
+  private func overviewTab(_ investment: InvestmentResponse) -> some View {
     VStack(spacing: AppTheme.Spacing.md) {
       // Performance metrics for stocks
       if shouldShowTransactions(investment.type) {
@@ -260,7 +260,7 @@ struct InvestmentDetailView: View {
   }
   
   // MARK: - Investment Info Card
-  private func investmentInfoCard(_ investment: InvestmentModel) -> some View {
+  private func investmentInfoCard(_ investment: InvestmentResponse) -> some View {
     VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
       Text("Investment Details")
         .font(AppTheme.Typography.bodyBold)

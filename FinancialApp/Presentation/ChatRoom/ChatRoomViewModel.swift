@@ -13,14 +13,17 @@ import Realtime
 @Observable final class ChatRoomViewModel {
   @ObservationIgnored
   @Dependency(\.chatServices) private var chatServices
-  
+
   @ObservationIgnored
   @Dependency(\.profileService) private var profileService
-  
+
   var chatMessagesState: ViewState<[Message]> = .idle
+  var agentsState: ViewState<[AgentResponse]> = .idle
+  var selectedAgent: AgentResponse?
+  var showAgentSelector = false
   var id: String
   var channelStatus: RealtimeChannelStatus?
-  
+
   init(id: String) {
     self.id = id
   }
@@ -132,7 +135,7 @@ import Realtime
   func subscribeToMessages() async {
     for await (message, status) in chatServices.subscribeToInsertions(id) {
       channelStatus = status
-      
+
       if let message {
         if message.role != "user" {
           var data = chatMessagesState.getData() ?? []
@@ -140,6 +143,34 @@ import Realtime
           chatMessagesState = .success(data)
         }
       }
+    }
+  }
+
+  func loadAgents() async {
+    do {
+      agentsState = .loading
+      let agents = try await chatServices.fetchAgents()
+      agentsState = .success(agents)
+
+      // Load current conversation to get the selected agent
+      let conversation = try await chatServices.fetchConversation(id)
+      if let agentId = conversation.agentId {
+        selectedAgent = agents.first(where: { $0.id == agentId })
+      }
+    } catch {
+      agentsState = .error(error)
+    }
+  }
+
+  func selectAgent(_ agent: AgentResponse?) async {
+    do {
+      // Update the conversation with the selected agent
+      try await chatServices.updateConversationAgent(id, agent?.id)
+      selectedAgent = agent
+      showAgentSelector = false
+    } catch {
+      // Handle error - could show an alert
+      print("Error updating agent: \(error)")
     }
   }
 
@@ -154,6 +185,7 @@ extension MessageResponse {
       id: self.id,
       user: .init(id: id, name: "", avatarURL: nil, type: self.role == "user" ? .current : .other),
       status: status,
+      createdAt: createdAt ?? Date(),
       text: self.content,
     )
   }

@@ -1,4 +1,5 @@
 import SwiftUI
+import Inject
 
 struct AccountDetailView: View {
   let accountId: String
@@ -6,6 +7,7 @@ struct AccountDetailView: View {
   @State private var showCopiedAlert = false
   @State private var copiedText = ""
   @Environment(\.dismiss) private var dismiss
+  @ObserveInjection var inject
   
   init(accountId: String) {
     self.accountId = accountId
@@ -91,8 +93,10 @@ struct AccountDetailView: View {
         .padding(.top, 60)
         .transition(.move(edge: .top).combined(with: .opacity))
         .animation(.spring(response: 0.3), value: showCopiedAlert)
+        
       }
     }
+    .enableInjection()
   }
   
   // MARK: - Account Header Card

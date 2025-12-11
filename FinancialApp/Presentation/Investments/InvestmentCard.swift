@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct InvestmentCard: View {
-    let investment: InvestmentModel
+    let investment: InvestmentResponse
     var onTap: (() -> Void)?
 
     var body: some View {
@@ -81,7 +81,7 @@ struct InvestmentCard: View {
                 }
 
                 // Additional info
-                if let maturityDate = investment.maturityDate {
+              if investment.maturityDate != nil {
                     HStack {
                         Image(systemName: "calendar")
                             .font(.system(size: 12))
@@ -120,7 +120,7 @@ struct InvestmentCard: View {
 
 // MARK: - Compact Investment Card
 struct InvestmentCardCompact: View {
-    let investment: InvestmentModel
+    let investment: InvestmentResponse
 
     var body: some View {
         HStack(spacing: AppTheme.Spacing.sm) {

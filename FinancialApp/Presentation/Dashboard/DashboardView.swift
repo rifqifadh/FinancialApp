@@ -1,6 +1,8 @@
 import SwiftUI
+import Inject
 
 struct DashboardView: View {
+  @ObserveInjection var inject
   @Environment(RouterPath.self) var routerPath
   
   @State private var viewModel = DashboardViewModel()
@@ -10,13 +12,13 @@ struct DashboardView: View {
     ScrollView {
       VStack(spacing: AppTheme.Spacing.lg) {
         // Header with greeting
-        headerSection
-        
-        // Financial Overview Card
+//        headerSection
+//        
+//        // Financial Overview Card
         financialOverviewCard
           .padding(.horizontal)
-        
-        // Quick Actions Menu
+
+//        // Quick Actions Menu
         quickActionsSection
           .padding(.horizontal)
         
@@ -38,6 +40,7 @@ struct DashboardView: View {
     .background(AppTheme.Colors.background)
     .navigationTitle("Dashboard")
     .navigationBarTitleDisplayMode(.large)
+    .enableInjection()
   }
   
   // MARK: - Header Section

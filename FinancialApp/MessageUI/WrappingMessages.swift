@@ -124,9 +124,9 @@ extension ChatView {
 //            positionInMessagesSection: positionInMessagesSection, commentsPosition: nil)
         }
         
-        let nextMessageIsAReply = nextMessage?.replyMessage != nil
-        let nextMessageIsFirstLevel = nextMessage?.replyMessage == nil
-        let prevMessageIsFirstLevel = prevMessage?.replyMessage == nil
+//        let nextMessageIsAReply = nextMessage?.replyMessage != nil
+//        let nextMessageIsFirstLevel = nextMessage?.replyMessage == nil
+//        let prevMessageIsFirstLevel = prevMessage?.replyMessage == nil
         
 //        let positionInComments: PositionInCommentsGroup
 //        if message.replyMessage == nil && !nextMessageIsAReply {
@@ -141,29 +141,29 @@ extension ChatView {
 //          positionInComments = .middleComment
 //        }
         
-        let positionInSection: PositionInSection
-        if !prevMessageExists, !nextMessageExists {
-          positionInSection = .single
-        } else if !prevMessageExists {
-          positionInSection = .first
-        } else if !nextMessageExists {
-          positionInSection = .last
-        } else {
-          positionInSection = .middle
-        }
+//        let positionInSection: PositionInSection
+//        if !prevMessageExists, !nextMessageExists {
+//          positionInSection = .single
+//        } else if !prevMessageExists {
+//          positionInSection = .first
+//        } else if !nextMessageExists {
+//          positionInSection = .last
+//        } else {
+//          positionInSection = .middle
+//        }
         
-        let positionInChat: PositionInChat
-        if !isFirstSection, !isLastSection {
-          positionInChat = .middle
-        } else if !prevMessageExists, !nextMessageExists, isFirstSection, isLastSection {
-          positionInChat = .single
-        } else if !prevMessageExists, isFirstSection {
-          positionInChat = .first
-        } else if !nextMessageExists, isLastSection {
-          positionInChat = .last
-        } else {
-          positionInChat = .middle
-        }
+//        let positionInChat: PositionInChat
+//        if !isFirstSection, !isLastSection {
+//          positionInChat = .middle
+//        } else if !prevMessageExists, !nextMessageExists, isFirstSection, isLastSection {
+//          positionInChat = .single
+//        } else if !prevMessageExists, isFirstSection {
+//          positionInChat = .first
+//        } else if !nextMessageExists, isLastSection {
+//          positionInChat = .last
+//        } else {
+//          positionInChat = .middle
+//        }
         
 //        let commentsPosition = CommentsPosition(
 //          inCommentsGroup: positionInComments, inSection: positionInSection,

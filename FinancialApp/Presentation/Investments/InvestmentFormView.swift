@@ -6,7 +6,7 @@ struct InvestmentFormView: View {
     @Dependency(\.investmentService) var investmentService
     @Dependency(\.accountService) var accountService
 
-    var existingInvestment: InvestmentModel?
+    var existingInvestment: InvestmentResponse?
     var onSave: (() -> Void)?
 
     @State private var name = ""
@@ -200,7 +200,7 @@ struct InvestmentFormView: View {
         }
     }
 
-    private func populateForm(with investment: InvestmentModel) {
+    private func populateForm(with investment: InvestmentResponse) {
         name = investment.name
         selectedType = investment.type
         initialAmount = String(investment.initialAmount)
@@ -241,18 +241,25 @@ struct InvestmentFormView: View {
         do {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-            let params = CreateInvestmentParams(
+            
+            // Prepare maturity date string if needed
+            let maturityDateString: String? = if hasMaturityDate {
+                maturityDate.map { formatter.string(from: $0) }
+            } else {
+                nil
+            }
+              
+            let params = InsertInvestmentParams(
                 name: name,
                 type: selectedType.rawValue,
                 accountId: selectedAccount?.id,
-                initialAmount: Int(initialAmount) ?? 0,
-                currentValue: Int(currentValue) ?? 0,
+                initialAmount: Double(initialAmount) ?? 0,
+                currentValue: Double(currentValue) ?? 0,
                 purchaseDate: formatter.string(from: purchaseDate),
-                maturityDate: hasMaturityDate ? maturityDate.map { formatter.string(from: $0) } : nil,
+                maturityDate: maturityDateString,
                 interestRate: hasInterestRate ? Double(interestRate) : nil,
                 units: hasUnits ? Double(units) : nil,
-                pricePerUnit: hasUnits && !pricePerUnit.isEmpty ? Int(pricePerUnit) : nil,
+                pricePerUnit: hasUnits && !pricePerUnit.isEmpty ? Double(pricePerUnit) : nil,
                 notes: notes.isEmpty ? nil : notes
             )
 

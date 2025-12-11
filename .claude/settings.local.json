@@ -5,7 +5,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git restore:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(swiftc:*)",
+      "Bash(open:*)"
     ],
     "deny": [],
     "ask": []

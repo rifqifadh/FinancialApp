@@ -1,6 +1,13 @@
+//
+//  InvestmentResponse.swift
+//  FinancialApp
+//
+//  Created by Rifqi Fadhlillah on 10/12/25.
+//
+
 import Foundation
 
-struct InvestmentModel: Identifiable, Codable, Sendable, Equatable {
+struct InvestmentResponse: Identifiable, Codable, Sendable, Equatable {
     let id: String
     let userId: String
     let name: String
@@ -35,102 +42,6 @@ struct InvestmentModel: Identifiable, Codable, Sendable, Equatable {
         case notes
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        userId = try container.decode(String.self, forKey: .userId)
-        name = try container.decode(String.self, forKey: .name)
-
-        let typeString = try container.decode(String.self, forKey: .type)
-        type = InvestmentType(rawValue: typeString) ?? .other
-
-        accountId = try container.decodeIfPresent(String.self, forKey: .accountId)
-        accountName = try container.decodeIfPresent(String.self, forKey: .accountName)
-
-        // Handle amounts as string from JSON
-        let initialAmountString = try container.decode(String.self, forKey: .initialAmount)
-        initialAmount = Int(initialAmountString) ?? 0
-
-        let currentValueString = try container.decode(String.self, forKey: .currentValue)
-        currentValue = Int(currentValueString) ?? 0
-
-        // Handle dates
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-        let purchaseDateString = try container.decode(String.self, forKey: .purchaseDate)
-        if let date = dateFormatter.date(from: purchaseDateString) {
-            purchaseDate = date
-        } else {
-            purchaseDate = Date()
-        }
-
-        if let maturityDateString = try container.decodeIfPresent(String.self, forKey: .maturityDate),
-           let date = dateFormatter.date(from: maturityDateString) {
-            maturityDate = date
-        } else {
-            maturityDate = nil
-        }
-
-        interestRate = try container.decodeIfPresent(Double.self, forKey: .interestRate)
-        units = try container.decodeIfPresent(Double.self, forKey: .units)
-
-        if let pricePerUnitString = try container.decodeIfPresent(String.self, forKey: .pricePerUnit) {
-            pricePerUnit = Int(pricePerUnitString)
-        } else {
-            pricePerUnit = nil
-        }
-
-        notes = try container.decodeIfPresent(String.self, forKey: .notes)
-
-        if let createdAtString = try container.decodeIfPresent(String.self, forKey: .createdAt),
-           let date = dateFormatter.date(from: createdAtString) {
-            createdAt = date
-        } else {
-            createdAt = nil
-        }
-
-        if let updatedAtString = try container.decodeIfPresent(String.self, forKey: .updatedAt),
-           let date = dateFormatter.date(from: updatedAtString) {
-            updatedAt = date
-        } else {
-            updatedAt = nil
-        }
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(userId, forKey: .userId)
-        try container.encode(name, forKey: .name)
-        try container.encode(type.rawValue, forKey: .type)
-        try container.encodeIfPresent(accountId, forKey: .accountId)
-        try container.encodeIfPresent(accountName, forKey: .accountName)
-        try container.encode(String(initialAmount), forKey: .initialAmount)
-        try container.encode(String(currentValue), forKey: .currentValue)
-
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        try container.encode(formatter.string(from: purchaseDate), forKey: .purchaseDate)
-        if let maturityDate = maturityDate {
-            try container.encode(formatter.string(from: maturityDate), forKey: .maturityDate)
-        }
-
-        try container.encodeIfPresent(interestRate, forKey: .interestRate)
-        try container.encodeIfPresent(units, forKey: .units)
-        if let pricePerUnit = pricePerUnit {
-            try container.encode(String(pricePerUnit), forKey: .pricePerUnit)
-        }
-        try container.encodeIfPresent(notes, forKey: .notes)
-
-        if let createdAt = createdAt {
-            try container.encode(formatter.string(from: createdAt), forKey: .createdAt)
-        }
-        if let updatedAt = updatedAt {
-            try container.encode(formatter.string(from: updatedAt), forKey: .updatedAt)
-        }
     }
 
     // Computed properties
@@ -284,8 +195,8 @@ enum InvestmentType: String, Codable, CaseIterable, Sendable {
 }
 
 // MARK: - Mock Data
-extension InvestmentModel {
-    static let mockDeposito = InvestmentModel(
+extension InvestmentResponse {
+    static let mockDeposito = InvestmentResponse(
         id: "1",
         userId: "user1",
         name: "Deposito BCA 6 Bulan",
@@ -300,7 +211,7 @@ extension InvestmentModel {
         notes: "Deposito 6 bulan dengan bunga 5% per tahun"
     )
 
-    static let mockStocks = InvestmentModel(
+    static let mockStocks = InvestmentResponse(
         id: "2",
         userId: "user1",
         name: "BBCA - Bank Central Asia",
@@ -315,7 +226,7 @@ extension InvestmentModel {
         notes: "Blue chip banking stock"
     )
 
-    static let mockReksaDana = InvestmentModel(
+    static let mockReksaDana = InvestmentResponse(
         id: "3",
         userId: "user1",
         name: "Sucorinvest Equity Fund",
@@ -330,7 +241,7 @@ extension InvestmentModel {
         notes: "Reksa dana saham dengan performa bagus"
     )
 
-    static let mockObligation = InvestmentModel(
+    static let mockObligation = InvestmentResponse(
         id: "4",
         userId: "user1",
         name: "SBR010 - Savings Bond Ritel",
@@ -345,7 +256,7 @@ extension InvestmentModel {
         notes: "Obligasi pemerintah 2 tahun"
     )
 
-    static let mockGold = InvestmentModel(
+    static let mockGold = InvestmentResponse(
         id: "5",
         userId: "user1",
         name: "Emas Antam",

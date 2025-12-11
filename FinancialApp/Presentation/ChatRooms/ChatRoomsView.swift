@@ -11,14 +11,16 @@ import Dependencies
 struct ChatRoomsView: View {
   @Environment(RouterPath.self) private var routerPath
   @Dependency(\.chatServices) private var chatServices
-  
+
   @State private var showingAddRoom = false
   @State private var searchText = ""
-
-  // Mock data
-  @State private var chatRooms: [ConversationResponse] = []
+  @State private var chatRoomsState: ViewState<[ConversationResponse]> = .idle
 
   var filteredChatRooms: [ConversationResponse] {
+    guard let chatRooms = chatRoomsState.getData() else {
+      return []
+    }
+
     if searchText.isEmpty {
       return chatRooms
     } else {
@@ -27,28 +29,37 @@ struct ChatRoomsView: View {
   }
 
   var body: some View {
-    ScrollView {
-      VStack(spacing: AppTheme.Spacing.md) {
-        if filteredChatRooms.isEmpty {
-          emptyStateView
-        } else {
-          ForEach(filteredChatRooms, id: \.id) { room in
-            ChatRoomCard(room: room) {
-              // Handle tap - navigate to chat detail
-              routerPath.navigate(to: .chatRoom(id: room.id))
+    ViewStateView(
+      state: chatRoomsState,
+      content: { _ in
+        ScrollView {
+          VStack(spacing: AppTheme.Spacing.md) {
+            if filteredChatRooms.isEmpty {
+              emptyStateView
+            } else {
+              ForEach(filteredChatRooms, id: \.id) { room in
+                ChatRoomCard(room: room) {
+                  // Handle tap - navigate to chat detail
+                  routerPath.navigate(to: .chatRoom(id: room.id))
+                }
+              }
             }
           }
+          .padding(.horizontal)
+          .padding(.vertical)
+        }
+      },
+      retry: {
+        Task {
+          await loadChatRooms()
         }
       }
-      .padding(.horizontal)
-      .padding(.vertical)
-    }
+    )
     .task {
-      do {
-        chatRooms = try await chatServices.fetchConversations()
-      } catch {
-        print("Error fetching chat rooms: \(error)")
-      }
+      await loadChatRooms()
+    }
+    .refreshable {
+      await loadChatRooms()
     }
     .background(AppTheme.Colors.background)
     .navigationTitle("Chat Rooms")
@@ -66,6 +77,26 @@ struct ChatRoomsView: View {
     }
     .sheet(isPresented: $showingAddRoom) {
       ChatRoomFormView()
+    }
+    .onChange(of: showingAddRoom) { oldValue, newValue in
+      // Reload chat rooms when the form is dismissed
+      if oldValue == true && newValue == false {
+        Task {
+          await loadChatRooms()
+        }
+      }
+    }
+  }
+
+  // MARK: - Data Loading
+  private func loadChatRooms() async {
+    chatRoomsState = .loading
+
+    do {
+      let conversations = try await chatServices.fetchConversations()
+      chatRoomsState = .success(conversations)
+    } catch {
+      chatRoomsState = .error(error)
     }
   }
 

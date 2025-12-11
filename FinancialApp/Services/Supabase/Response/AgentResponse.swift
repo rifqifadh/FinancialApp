@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct AgentResponse: Codable, Equatable {
+struct AgentResponse: Codable, Equatable, Identifiable, Hashable {
   let id: String
   let createdAt: Date?
   let updatedAt: Date?
   let name: String
   let modelName: String?
-  
+
   enum CodingKeys: String, CodingKey {
     case id, name
     case createdAt = "created_at"

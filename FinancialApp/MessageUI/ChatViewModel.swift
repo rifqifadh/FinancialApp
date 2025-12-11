@@ -40,7 +40,7 @@ import SwiftUI
     case .reply:
 //      inputViewModel?.attachments.replyMessage = message.toReplyMessage()
       globalFocusState?.focus = .uuid(inputFieldId)
-    case .edit(let saveClosure):
+    case .edit(_):
 //      inputViewModel?.text = message.text
 //      inputViewModel?.edit(saveClosure)
       globalFocusState?.focus = .uuid(inputFieldId)

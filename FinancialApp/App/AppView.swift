@@ -14,11 +14,11 @@ struct AppView: View {
    
   var body: some View {
     Group {
-      if authStore.authState == .authenticated {
+//      if authStore.authState == .authenticated {
         TabView(selection: $selectedTab) {
           Tab("Dashboard", systemImage: "house", value: .dashboard) {
             NavigationTab {
-              DashboardTab()
+              DashboardView()
             }
           }
           
@@ -42,16 +42,17 @@ struct AppView: View {
           }
         }
         .navigationViewStyle(StackNavigationViewStyle())
-      } else if authStore.authState == .loading {
-        LoadingView()
-      }
-      else {
-        LoginView()
-      }
+//      } else if authStore.authState == .loading {
+//        LoadingView()
+//      }
+//      else {
+//        LoginView()
+//      }
     }
     .task {
       await authStore.checkAuthentication()
     }
+    
   }
 }
 

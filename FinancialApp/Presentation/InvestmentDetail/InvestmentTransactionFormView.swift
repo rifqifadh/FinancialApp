@@ -5,7 +5,7 @@ struct InvestmentTransactionFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Dependency(\.investmentTransactionService) var transactionService
 
-    let investment: InvestmentModel
+    let investment: InvestmentResponse
     var existingTransaction: InvestmentTransactionModel?
     var onSave: (() -> Void)?
 

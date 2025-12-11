@@ -92,3 +92,7 @@ iOSInjectionProject/
 # Sensitive configuration files
 Config.xcconfig
 *.xcconfig
+
+# Database migrations (contain sensitive schema information)
+supabase_migrations/
+*.sql

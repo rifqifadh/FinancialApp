@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C52DE4B2EE9205000D746B8 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = 2C52DE4A2EE9205000D746B8 /* Inject */; };
 		8C1A57372EA4BCB5009FA8FE /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57362EA4BCB5009FA8FE /* Auth */; };
 		8C1A57392EA4BCB5009FA8FE /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A57382EA4BCB5009FA8FE /* Functions */; };
 		8C1A573B2EA4BCB5009FA8FE /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1A573A2EA4BCB5009FA8FE /* PostgREST */; };
@@ -27,6 +28,7 @@
 		8C1A576E2EA4D584009FA8FE /* Exceptions for "FinancialApp" folder in "FinancialApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config.xcconfig,
 				Info.plist,
 				"Utilities/Extensions/URLCache+Extensions.swift",
 			);
@@ -71,6 +73,7 @@
 				8C1A573F2EA4BCB5009FA8FE /* Storage in Frameworks */,
 				8C1A573D2EA4BCB5009FA8FE /* Realtime in Frameworks */,
 				8C1A576C2EA4CC50009FA8FE /* GoogleSignInSwift in Frameworks */,
+				2C52DE4B2EE9205000D746B8 /* Inject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +134,7 @@
 				8C1A57662EA4CC35009FA8FE /* DependenciesMacros */,
 				8C1A57692EA4CC50009FA8FE /* GoogleSignIn */,
 				8C1A576B2EA4CC50009FA8FE /* GoogleSignInSwift */,
+				2C52DE4A2EE9205000D746B8 /* Inject */,
 			);
 			productName = FinancialApp;
 			productReference = 8C1A57272EA4B89E009FA8FE /* FinancialApp.app */;
@@ -144,7 +148,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					8C1A57262EA4B89E009FA8FE = {
 						CreatedOnToolsVersion = 26.0.1;
@@ -164,6 +168,7 @@
 				8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				8C1A57632EA4CC35009FA8FE /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 				8C1A57682EA4CC50009FA8FE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				2C52DE492EE9205000D746B8 /* XCRemoteSwiftPackageReference "Inject" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8C1A57282EA4B89E009FA8FE /* Products */;
@@ -232,8 +237,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = UVT3R8TDBM;
+				EMIT_FRONTEND_COMMAND_LINES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -255,6 +262,11 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-interposable",
+				);
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -296,8 +308,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = UVT3R8TDBM;
+				EMIT_FRONTEND_COMMAND_LINES = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -312,6 +326,11 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-interposable",
+				);
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -326,6 +345,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = UVT3R8TDBM;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -348,6 +368,10 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-interposable",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rifqifadh.FinancialApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -375,6 +399,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = UVT3R8TDBM;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -397,6 +422,10 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-interposable",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rifqifadh.FinancialApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -438,6 +467,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2C52DE492EE9205000D746B8 /* XCRemoteSwiftPackageReference "Inject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzysztofzablocki/Inject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.2;
+			};
+		};
 		8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -465,6 +502,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2C52DE4A2EE9205000D746B8 /* Inject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C52DE492EE9205000D746B8 /* XCRemoteSwiftPackageReference "Inject" */;
+			productName = Inject;
+		};
 		8C1A57362EA4BCB5009FA8FE /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8C1A57352EA4BCB5009FA8FE /* XCRemoteSwiftPackageReference "supabase-swift" */;

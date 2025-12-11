@@ -1,6 +1,8 @@
 import SwiftUI
+import Inject
 
 struct AccountsView: View {
+  @ObserveInjection var inject
   @Environment(RouterPath.self) private var routerPath
   
   @State private var viewModel = AccountsViewModel()
@@ -56,6 +58,7 @@ struct AccountsView: View {
         }
       }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .enableInjection()
   }
   
   private var content: some View {

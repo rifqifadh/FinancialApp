@@ -123,37 +123,49 @@ struct MessageView: View {
 
   
   var body: some View {
-    HStack {
-      if !message.user.isCurrentUser {
-        avatarView
-      }
-      
-      
-      
-      VStack(alignment: message.user.isCurrentUser ? .trailing : .leading, spacing: 2) {
-        //        if !isDisplayingMessageMenu, let replyMessage = message.replyMessage?.toMessage() {
-        //
-        //        }
-        bubbleView(message)
-      }
-      if message.user.isCurrentUser, let status = message.status {
-        MessageStatusView(status: status) {
-          if case let .error(draft) = status {
-            viewModel.sendMessage(draft)
+    Group {
+      // Use Claude-style view for AI agent messages
+      if message.user.type == .other || message.user.type == .system {
+        ClaudeStyleMessageView(
+          message: message,
+          avatarSize: avatarSize,
+          showAvatar: shouldShowAvatar,
+          showMessageTimeView: showMessageTimeView,
+          positionInUserGroup: positionInUserGroup
+        )
+      } else {
+        // Use bubble style for current user messages
+        HStack {
+          if !message.user.isCurrentUser {
+            avatarView
+          }
+
+          VStack(alignment: message.user.isCurrentUser ? .trailing : .leading, spacing: 2) {
+            //        if !isDisplayingMessageMenu, let replyMessage = message.replyMessage?.toMessage() {
+            //
+            //        }
+            bubbleView(message)
+          }
+          if message.user.isCurrentUser, let status = message.status {
+            MessageStatusView(status: status) {
+              if case let .error(draft) = status {
+                viewModel.sendMessage(draft)
+              }
+            }
+            .sizeGetter($statusSize)
           }
         }
-        .sizeGetter($statusSize)
+        .padding(.top, topPadding)
+        .padding(.bottom, bottomPadding)
+        .padding(.trailing, message.user.isCurrentUser ? MessageView.horizontalNoAvatarPadding : 0)
+        .padding(
+          message.user.isCurrentUser ? .leading : .trailing, MessageView.horizontalBubblePadding
+        )
+        .frame(
+          maxWidth: UIScreen.main.bounds.width,
+          alignment: message.user.isCurrentUser ? .trailing : .leading)
       }
     }
-    .padding(.top, topPadding)
-    .padding(.bottom, bottomPadding)
-    .padding(.trailing, message.user.isCurrentUser ? MessageView.horizontalNoAvatarPadding : 0)
-    .padding(
-      message.user.isCurrentUser ? .leading : .trailing, MessageView.horizontalBubblePadding
-    )
-    .frame(
-      maxWidth: UIScreen.main.bounds.width,
-      alignment: message.user.isCurrentUser ? .trailing : .leading)
   }
   
   @ViewBuilder

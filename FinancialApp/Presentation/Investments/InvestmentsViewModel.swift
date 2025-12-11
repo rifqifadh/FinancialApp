@@ -9,15 +9,15 @@ final class InvestmentsViewModel {
     @Dependency(\.investmentService) var investmentService
 
     // MARK: - State
-    var investments: [InvestmentModel] = []
+    var investments: [InvestmentResponse] = []
     var isLoading = false
     var errorMessage: String?
     var selectedType: InvestmentType?
     var searchText = ""
-    var investmentStateView: ViewState<[InvestmentModel]> = .idle
+    var investmentStateView: ViewState<[InvestmentResponse]> = .idle
 
     // MARK: - Computed Properties
-    var filteredInvestments: [InvestmentModel] {
+    var filteredInvestments: [InvestmentResponse] {
         var result = investments
 
         // Filter by type
@@ -36,7 +36,7 @@ final class InvestmentsViewModel {
         return result
     }
 
-    var investmentsByType: [InvestmentType: [InvestmentModel]] {
+    var investmentsByType: [InvestmentType: [InvestmentResponse]] {
         Dictionary(grouping: filteredInvestments, by: { $0.type })
     }
 
@@ -80,19 +80,19 @@ final class InvestmentsViewModel {
             }
     }
 
-    var profitableInvestments: [InvestmentModel] {
+    var profitableInvestments: [InvestmentResponse] {
         investments.filter { $0.isProfit }
     }
 
-    var losingInvestments: [InvestmentModel] {
+    var losingInvestments: [InvestmentResponse] {
         investments.filter { $0.isLoss }
     }
 
-    var maturedInvestments: [InvestmentModel] {
+    var maturedInvestments: [InvestmentResponse] {
         investments.filter { $0.isMatured }
     }
 
-    var activeInvestments: [InvestmentModel] {
+    var activeInvestments: [InvestmentResponse] {
         investments.filter { !$0.isMatured }
     }
 
@@ -123,7 +123,7 @@ final class InvestmentsViewModel {
         searchText = ""
     }
 
-    func deleteInvestment(_ investment: InvestmentModel) async {
+    func deleteInvestment(_ investment: InvestmentResponse) async {
         do {
             try await investmentService.delete(investment.id)
             investments.removeAll { $0.id == investment.id }
@@ -132,12 +132,12 @@ final class InvestmentsViewModel {
         }
     }
 
-    func updateInvestmentValue(_ investment: InvestmentModel, newValue: Int) async {
+    func updateInvestmentValue(_ investment: InvestmentResponse, newValue: Int) async {
         do {
             try await investmentService.updateCurrentValue(investment.id, newValue)
             if let index = investments.firstIndex(where: { $0.id == investment.id }) {
                 var updated = investment
-                investments[index] = InvestmentModel(
+                investments[index] = InvestmentResponse(
                     id: updated.id,
                     userId: updated.userId,
                     name: updated.name,
@@ -161,15 +161,15 @@ final class InvestmentsViewModel {
         }
     }
 
-    func getInvestment(by id: String) -> InvestmentModel? {
+    func getInvestment(by id: String) -> InvestmentResponse? {
         investments.first { $0.id == id }
     }
 
-    func getTopPerformers(limit: Int = 5) -> [InvestmentModel] {
+    func getTopPerformers(limit: Int = 5) -> [InvestmentResponse] {
         Array(investments.sorted { $0.profitPercentage > $1.profitPercentage }.prefix(limit))
     }
 
-    func getWorstPerformers(limit: Int = 5) -> [InvestmentModel] {
+    func getWorstPerformers(limit: Int = 5) -> [InvestmentResponse] {
         Array(investments.sorted { $0.profitPercentage < $1.profitPercentage }.prefix(limit))
     }
 }
