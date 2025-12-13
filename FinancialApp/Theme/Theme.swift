@@ -279,7 +279,7 @@ struct FinancialDashboardView: View {
           )
           
           // Quick Actions
-          QuickActionsView()
+          QuickActionsDashboardView()
           
           // Recent Transactions
           VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
@@ -392,28 +392,28 @@ struct BalanceCard: View {
 }
 
 // MARK: - Quick Actions Component
-struct QuickActionsView: View {
+struct QuickActionsDashboardView: View {
   var body: some View {
     HStack(spacing: AppTheme.Spacing.md) {
-      QuickActionButton(
+      QuickActionDashboardButton(
         icon: "arrow.up.circle.fill",
         title: "Send",
         color: AppTheme.Colors.primary
       )
       
-      QuickActionButton(
+      QuickActionDashboardButton(
         icon: "arrow.down.circle.fill",
         title: "Request",
         color: AppTheme.Colors.secondary
       )
       
-      QuickActionButton(
+      QuickActionDashboardButton(
         icon: "creditcard.fill",
         title: "Cards",
         color: AppTheme.Colors.accent
       )
       
-      QuickActionButton(
+      QuickActionDashboardButton(
         icon: "chart.bar.fill",
         title: "Analytics",
         color: AppTheme.Colors.primaryDark
@@ -422,7 +422,7 @@ struct QuickActionsView: View {
   }
 }
 
-struct QuickActionButton: View {
+struct QuickActionDashboardButton: View {
   let icon: String
   let title: String
   let color: Color

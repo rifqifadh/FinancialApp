@@ -84,6 +84,8 @@ extension InvestmentTransactionService: DependencyKey {
         }
     )
 
+    static let previewValue = InvestmentTransactionService.mockPreviewValue
+
     static let testValue = InvestmentTransactionService(
         fetchAll: { investmentId in
             InvestmentTransactionModel.mockTransactions.filter { $0.investmentId == investmentId }

@@ -15,9 +15,10 @@ struct InsertInvestmentParams: Codable, Sendable {
   let maturityDate: String?
   let interestRate: Double?
   let units: Double?
+  let initialPricePerUnit: Double?
   let pricePerUnit: Double?
   let notes: String?
-  
+
   enum CodingKeys: String, CodingKey {
     case name
     case type
@@ -28,6 +29,7 @@ struct InsertInvestmentParams: Codable, Sendable {
     case maturityDate = "maturity_date"
     case interestRate = "interest_rate"
     case units
+    case initialPricePerUnit = "initial_price_per_unit"
     case pricePerUnit = "price_per_unit"
     case notes
   }

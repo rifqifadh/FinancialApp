@@ -4,6 +4,7 @@ import Dependencies
 struct InvestmentFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Dependency(\.investmentService) var investmentService
+    @Dependency(\.investmentTransactionService) var investmentTransactionService
     @Dependency(\.accountService) var accountService
 
     var existingInvestment: InvestmentResponse?
@@ -19,8 +20,8 @@ struct InvestmentFormView: View {
     @State private var hasMaturityDate = false
     @State private var interestRate = ""
     @State private var hasInterestRate = false
-    @State private var units = ""
-    @State private var hasUnits = false
+    @State private var lot = ""
+    @State private var hasLot = false
     @State private var pricePerUnit = ""
     @State private var notes = ""
 
@@ -93,12 +94,12 @@ struct InvestmentFormView: View {
                     }
                 }
 
-                // Units & Price (for stocks, mutual funds, etc.)
-                Section("Units & Price") {
-                    Toggle("Has Units", isOn: $hasUnits)
+                // Lot & Price (for stocks, mutual funds, etc.)
+                Section("Lot & Price") {
+                    Toggle("Has Lot", isOn: $hasLot)
 
-                    if hasUnits {
-                        TextField("Number of Units", text: $units)
+                    if hasLot {
+                        TextField("Number of Lots", text: $lot)
                             .keyboardType(.decimalPad)
 
                         TextField("Price Per Unit", text: $pricePerUnit)
@@ -219,8 +220,9 @@ struct InvestmentFormView: View {
         }
 
         if let investmentUnits = investment.units {
-            hasUnits = true
-            units = String(investmentUnits)
+            hasLot = true
+            // Convert units to lot (units / 100)
+            lot = String(investmentUnits / 100)
         }
 
         if let price = investment.pricePerUnit {
@@ -249,6 +251,13 @@ struct InvestmentFormView: View {
                 nil
             }
               
+            // Convert lot to units (lot * 100)
+            let unitsValue: Double? = if hasLot, let lotValue = Double(lot) {
+                lotValue * 100
+            } else {
+                nil
+            }
+
             let params = InsertInvestmentParams(
                 name: name,
                 type: selectedType.rawValue,
@@ -258,8 +267,9 @@ struct InvestmentFormView: View {
                 purchaseDate: formatter.string(from: purchaseDate),
                 maturityDate: maturityDateString,
                 interestRate: hasInterestRate ? Double(interestRate) : nil,
-                units: hasUnits ? Double(units) : nil,
-                pricePerUnit: hasUnits && !pricePerUnit.isEmpty ? Double(pricePerUnit) : nil,
+                units: unitsValue,
+                initialPricePerUnit: hasLot && !pricePerUnit.isEmpty ? Double(pricePerUnit) : nil,
+                pricePerUnit: hasLot && !pricePerUnit.isEmpty ? Double(pricePerUnit) : nil,
                 notes: notes.isEmpty ? nil : notes
             )
 
@@ -271,13 +281,36 @@ struct InvestmentFormView: View {
                     currentValue: Int(currentValue),
                     maturityDate: hasMaturityDate ? maturityDate.map { formatter.string(from: $0) } : nil,
                     interestRate: hasInterestRate ? Double(interestRate) : nil,
-                    units: hasUnits ? Double(units) : nil,
-                    pricePerUnit: hasUnits && !pricePerUnit.isEmpty ? Int(pricePerUnit) : nil,
+                    units: unitsValue,
+                    pricePerUnit: hasLot && !pricePerUnit.isEmpty ? Int(pricePerUnit) : nil,
                     notes: notes.isEmpty ? nil : notes
                 )
                 try await investmentService.update(investment.id, updateParams)
             } else {
-                try await investmentService.create(params)
+                // Create the investment and get the ID
+                let investmentId = try await investmentService.create(params)
+
+                // If the investment type is stocks and has lot, create an initial transaction
+                if selectedType == .stocks && hasLot,
+                   let units = unitsValue,
+                   let pricePerUnitValue = Int(pricePerUnit),
+                   units > 0,
+                   pricePerUnitValue > 0 {
+
+                    let totalAmount = Int(units * Double(pricePerUnitValue))
+
+                    let transactionParams = CreateInvestmentTransactionParams(
+                        investmentId: investmentId,
+                        type: InvestmentTransactionType.buy.rawValue,
+                        units: units,
+                        pricePerUnit: pricePerUnitValue,
+                        totalAmount: totalAmount,
+                        transactionDate: formatter.string(from: purchaseDate),
+                        notes: "Initial purchase"
+                    )
+
+                    try await investmentTransactionService.create(transactionParams)
+                }
             }
 
             onSave?()

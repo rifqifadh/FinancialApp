@@ -1,19 +1,43 @@
 import SwiftUI
+import Inject
 
 struct InvestmentDetailView: View {
   let investmentId: String
   @State private var viewModel = InvestmentDetailViewModel()
   @State private var selectedTab = 0
   @State private var showingAddTransaction = false
+  @State private var selectedQuickAction: QuickAction?
+  @State private var transactionToEdit: InvestmentTransactionModel?
+  @State private var showingUpdatePrice = false
+  @State private var newPricePerUnit = ""
+
   @Environment(\.dismiss) private var dismiss
+  
+  @ObserveInjection var inject
   
   var body: some View {
     ScrollView {
       VStack(spacing: AppTheme.Spacing.lg) {
         if let investment = viewModel.investment {
+          // Maturity Banner (if applicable)
+          if investment.isMatured && investment.maturityDate != nil {
+            MaturityBannerView(investment: investment) {
+              Task {
+                await viewModel.refreshAll(investmentId: investmentId)
+              }
+            }
+            .padding(.horizontal)
+          }
+          
           // Header Card
           investmentHeaderCard(investment)
             .padding(.horizontal)
+          
+          // Quick Actions
+          QuickActionsView(investment: investment) { action in
+            handleQuickAction(action, for: investment)
+          }
+          .padding(.horizontal)
           
           // Tabs (only for stocks and similar investments)
           if shouldShowTransactions(investment.type) {
@@ -69,76 +93,106 @@ struct InvestmentDetailView: View {
         }
       }
     }
+    .sheet(item: $transactionToEdit) { transaction in
+      if let investment = viewModel.investment {
+        InvestmentTransactionFormView(
+          investment: investment,
+          existingTransaction: transaction
+        ) {
+          Task {
+            await viewModel.refreshAll(investmentId: investmentId)
+          }
+        }
+      }
+    }
+    .confirmationDialog(
+      "Delete Transaction",
+      isPresented: $viewModel.showingDeleteConfirmation,
+      titleVisibility: .visible
+    ) {
+      Button("Delete", role: .destructive) {
+        Task {
+          await viewModel.performDelete()
+        }
+      }
+      Button("Cancel", role: .cancel) {
+        viewModel.cancelDelete()
+      }
+    } message: {
+      if let transaction = viewModel.transactionToDelete {
+        Text("Are you sure you want to delete this \(transaction.type.rawValue.lowercased()) transaction of \(transaction.totalAmount.toCurrency())?")
+      }
+    }
+    .sheet(isPresented: $showingUpdatePrice) {
+      if let investment = viewModel.investment {
+        updatePriceSheet(investment)
+      }
+    }
+    .enableInjection()
   }
   
   // MARK: - Investment Header Card
   private func investmentHeaderCard(_ investment: InvestmentResponse) -> some View {
-    VStack(spacing: AppTheme.Spacing.md) {
-      HStack {
-        // Icon
+    VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
+      // Name and Icon
+      HStack(spacing: AppTheme.Spacing.md) {
         ZStack {
           Circle()
             .fill(AppTheme.Colors.accent.opacity(0.1))
-            .frame(width: 56, height: 56)
+            .frame(width: 48, height: 48)
           
           Image(systemName: investment.icon)
-            .font(.system(size: 24, weight: .semibold))
+            .font(.system(size: 20, weight: .semibold))
             .foregroundStyle(AppTheme.Colors.accent)
         }
         
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
           Text(investment.name)
-            .font(AppTheme.Typography.financialMedium)
+            .font(AppTheme.Typography.bodyBold)
             .foregroundStyle(AppTheme.Colors.primaryText)
           
           Text(investment.type.displayName)
             .font(AppTheme.Typography.caption)
             .foregroundStyle(AppTheme.Colors.tertiaryText)
         }
-        
-        Spacer()
-        
-        VStack(alignment: .trailing, spacing: 2) {
-          HStack(spacing: 4) {
-            Image(systemName: investment.isProfit ? "arrow.up" : "arrow.down")
-              .font(.system(size: 12, weight: .bold))
-            
-            Text(String(format: "%.2f%%", abs(investment.profitPercentage)))
-              .font(AppTheme.Typography.bodyBold)
-          }
-          .foregroundStyle(investment.isProfit ? AppTheme.Colors.profit : AppTheme.Colors.loss)
-        }
       }
       
-      Divider()
-        .background(AppTheme.Colors.divider)
-      
-      // Current Value
-      HStack {
-        VStack(alignment: .leading, spacing: 4) {
-          Text("Current Value")
-            .font(AppTheme.Typography.caption)
-            .foregroundStyle(AppTheme.Colors.secondaryText)
-          
-          Text(investment.currentValue.toCurrency())
-            .font(AppTheme.Typography.largeTitle)
-            .foregroundStyle(AppTheme.Colors.primaryText)
-        }
+      if (!shouldShowTransactions(investment.type)) {
+        // Total Return (for stocks/mutual funds) or Total Profit (for deposito/bonds)
+        Divider()
         
-        Spacer()
-        
-        VStack(alignment: .trailing, spacing: 4) {
-          Text("Gain/Loss")
-            .font(AppTheme.Typography.caption)
-            .foregroundStyle(AppTheme.Colors.secondaryText)
+        HStack(alignment: .bottom, spacing: AppTheme.Spacing.md) {
+          VStack(alignment: .leading, spacing: 2) {
+            Text(shouldShowTransactions(investment.type) ? "Total Return" : "Keuntungan")
+              .font(AppTheme.Typography.caption)
+              .foregroundStyle(AppTheme.Colors.secondaryText)
+            
+            // For deposito/bonds: show simple profit
+            Text(investment.profit.toCurrency())
+              .font(AppTheme.Typography.bodyBold)
+              .foregroundStyle(investment.isProfit ? AppTheme.Colors.profit : AppTheme.Colors.loss)
+          }
           
-          Text(investment.profit.toCurrency())
-            .font(AppTheme.Typography.bodyBold)
+          Spacer()
+          
+          VStack {
+            Text("Imbal Hasil")
+              .font(AppTheme.Typography.caption)
+              .foregroundStyle(AppTheme.Colors.secondaryText)
+            HStack(spacing: 4) {
+              // For deposito/bonds: use existing profit percentage
+              Image(systemName: investment.isProfit ? "arrow.up" : "arrow.down")
+                .font(.system(size: 12, weight: .bold))
+              Text(String(format: "%.2f%%", abs(investment.profitPercentage)))
+                .font(AppTheme.Typography.bodyBold)
+            }
             .foregroundStyle(investment.isProfit ? AppTheme.Colors.profit : AppTheme.Colors.loss)
+          }
         }
       }
     }
     .padding(AppTheme.Spacing.lg)
+    .frame(maxWidth: .infinity, alignment: .leading)
     .background(AppTheme.Colors.cardBackground)
     .cornerRadius(AppTheme.CornerRadius.medium)
     .shadow(color: Color.black.opacity(0.05), radius: 8, y: 2)
@@ -196,9 +250,9 @@ struct InvestmentDetailView: View {
           totalBuy: viewModel.totalBuyAmount,
           totalSell: viewModel.totalSellAmount,
           totalDividend: viewModel.totalDividends,
-          buyUnits: viewModel.totalBuyUnits,
-          sellUnits: viewModel.totalSellUnits,
-          currentUnits: viewModel.currentHoldingUnits
+          buyLot: viewModel.totalBuyLot,
+          sellLot: viewModel.totalSellLot,
+          currentLot: viewModel.currentHoldingLot
         )
         .padding(.horizontal)
       }
@@ -212,25 +266,78 @@ struct InvestmentDetailView: View {
   // MARK: - Transactions Tab
   private var transactionsTab: some View {
     VStack(spacing: AppTheme.Spacing.md) {
+      // Filter UI
+      TransactionFilterView(
+        selectedFilter: $viewModel.selectedFilter,
+        selectedSort: $viewModel.selectedSort,
+        searchText: $viewModel.searchText
+      )
+      .padding(.horizontal)
+      
       ViewStateView(state: viewModel.transactionsStateView) { _ in
-        if viewModel.transactions.isEmpty {
-          emptyTransactionsView
+        if viewModel.filteredAndSortedTransactions.isEmpty {
+          if viewModel.transactions.isEmpty {
+            emptyTransactionsView
+          } else {
+            noResultsView
+          }
         } else {
           transactionsList
+        }
+      }
+    }
+  }
+  
+  private var transactionsList: some View {
+    VStack(spacing: AppTheme.Spacing.sm) {
+      ForEach(viewModel.filteredAndSortedTransactions) { transaction in
+        InvestmentTransactionCard(transaction: transaction) {
+          transactionToEdit = transaction
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+          Button(role: .destructive) {
+            viewModel.confirmDelete(transaction)
+          } label: {
+            Label("Delete", systemImage: "trash")
+          }
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+          Button {
+            transactionToEdit = transaction
+          } label: {
+            Label("Edit", systemImage: "pencil")
+          }
+          .tint(AppTheme.Colors.accent)
         }
       }
     }
     .padding(.horizontal)
   }
   
-  private var transactionsList: some View {
-    VStack(spacing: AppTheme.Spacing.sm) {
-      ForEach(viewModel.transactions) { transaction in
-        InvestmentTransactionCard(transaction: transaction) {
-          // Handle transaction tap if needed
+  private var noResultsView: some View {
+    VStack(spacing: AppTheme.Spacing.md) {
+      Image(systemName: "magnifyingglass")
+        .font(.system(size: 48))
+        .foregroundStyle(AppTheme.Colors.tertiaryText)
+      
+      Text("No Matching Transactions")
+        .font(AppTheme.Typography.body)
+        .foregroundStyle(AppTheme.Colors.secondaryText)
+      
+      Button {
+        withAnimation {
+          viewModel.selectedFilter = .all
+          viewModel.searchText = ""
         }
+      } label: {
+        Text("Clear Filters")
+          .font(AppTheme.Typography.body)
+          .foregroundStyle(AppTheme.Colors.accent)
       }
     }
+    .frame(maxWidth: .infinity)
+    .padding(.vertical, AppTheme.Spacing.xxl)
+    .padding(.horizontal)
   }
   
   private var emptyTransactionsView: some View {
@@ -262,14 +369,45 @@ struct InvestmentDetailView: View {
   // MARK: - Investment Info Card
   private func investmentInfoCard(_ investment: InvestmentResponse) -> some View {
     VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
-      Text("Investment Details")
+      Text("Additional Details")
         .font(AppTheme.Typography.bodyBold)
         .foregroundStyle(AppTheme.Colors.primaryText)
-      
+
       VStack(spacing: AppTheme.Spacing.sm) {
+        infoRow("Nilai Sekarang", value: investment.currentValue.toCurrency())
+        infoRow("Modal Investasi", value: investment.initialAmount.toCurrency())
+        if let lot = investment.lot {
+          infoRow("Lot", value: "\(Int(lot))")
+        }
+
+        // Price per unit (for stocks)
+        if shouldShowTransactions(investment.type), let pricePerUnit = investment.pricePerUnit {
+          HStack {
+            Text("Current Price")
+              .font(AppTheme.Typography.caption)
+              .foregroundStyle(AppTheme.Colors.secondaryText)
+
+            Spacer()
+
+            HStack(spacing: 8) {
+              Text(pricePerUnit.toCurrency())
+                .font(AppTheme.Typography.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(AppTheme.Colors.primaryText)
+
+              Button {
+                newPricePerUnit = String(pricePerUnit)
+                showingUpdatePrice = true
+              } label: {
+                Image(systemName: "pencil.circle.fill")
+                  .font(.system(size: 20))
+                  .foregroundStyle(AppTheme.Colors.accent)
+              }
+            }
+          }
+        }
+
         infoRow("Purchase Date", value: formatDate(investment.purchaseDate))
-        infoRow("Initial Amount", value: investment.initialAmount.toCurrency())
-        infoRow("Days Held", value: "\(investment.daysHeld) days")
         
         if let maturityDate = investment.maturityDate {
           infoRow("Maturity Date", value: formatDate(maturityDate))
@@ -282,6 +420,7 @@ struct InvestmentDetailView: View {
             }
           }
         }
+        
         
         if let rate = investment.interestRate {
           infoRow("Interest Rate", value: "\(String(format: "%.2f", rate))% p.a.")
@@ -317,13 +456,14 @@ struct InvestmentDetailView: View {
   private func infoRow(_ label: String, value: String) -> some View {
     HStack {
       Text(label)
-        .font(AppTheme.Typography.body)
+        .font(AppTheme.Typography.caption)
         .foregroundStyle(AppTheme.Colors.secondaryText)
       
       Spacer()
       
       Text(value)
-        .font(AppTheme.Typography.body)
+        .font(AppTheme.Typography.subheadline)
+        .fontWeight(.semibold)
         .foregroundStyle(AppTheme.Colors.primaryText)
     }
   }
@@ -343,6 +483,23 @@ struct InvestmentDetailView: View {
   }
   
   // MARK: - Helper Functions
+  private func handleQuickAction(_ action: QuickAction, for investment: InvestmentResponse) {
+    switch action {
+    case .buyMore:
+      selectedQuickAction = action
+      showingAddTransaction = true
+    case .sell:
+      selectedQuickAction = action
+      showingAddTransaction = true
+    case .dividend, .recordCoupon:
+      selectedQuickAction = action
+      showingAddTransaction = true
+    case .updateValue:
+      // Handled by MaturityBannerView
+      break
+    }
+  }
+  
   private func shouldShowTransactions(_ type: InvestmentType?) -> Bool {
     guard let type = type else { return false }
     switch type {
@@ -358,6 +515,91 @@ struct InvestmentDetailView: View {
     formatter.dateStyle = .medium
     formatter.timeStyle = .none
     return formatter.string(from: date)
+  }
+
+  // MARK: - Update Price Sheet
+  private func updatePriceSheet(_ investment: InvestmentResponse) -> some View {
+    NavigationStack {
+      Form {
+        Section("Update Current Price") {
+          TextField("Price Per Unit", text: $newPricePerUnit)
+            .keyboardType(.numberPad)
+
+          if let currentPrice = investment.pricePerUnit,
+             let newPrice = Int(newPricePerUnit),
+             newPrice != currentPrice {
+            HStack {
+              Text("Change")
+                .font(AppTheme.Typography.caption)
+                .foregroundStyle(AppTheme.Colors.secondaryText)
+
+              Spacer()
+
+              let change = newPrice - currentPrice
+              let changePercentage = (Double(change) / Double(currentPrice)) * 100
+
+              VStack(alignment: .trailing, spacing: 2) {
+                Text(change.toCurrency())
+                  .font(AppTheme.Typography.bodyBold)
+                  .foregroundStyle(change >= 0 ? AppTheme.Colors.profit : AppTheme.Colors.loss)
+
+                Text(String(format: "%.2f%%", changePercentage))
+                  .font(AppTheme.Typography.caption)
+                  .foregroundStyle(change >= 0 ? AppTheme.Colors.profit : AppTheme.Colors.loss)
+              }
+            }
+          }
+
+          if let lot = investment.lot, let newPrice = Int(newPricePerUnit) {
+            let newValue = lot * 100 * Double(newPrice)
+            HStack {
+              Text("New Total Value")
+                .font(AppTheme.Typography.caption)
+                .foregroundStyle(AppTheme.Colors.secondaryText)
+
+              Spacer()
+
+              Text(newValue.toCurrency())
+                .font(AppTheme.Typography.bodyBold)
+                .foregroundStyle(AppTheme.Colors.primaryText)
+            }
+          }
+        }
+
+        Section {
+          Text("This will update the current price per unit for this investment. The total value will be recalculated based on your current holdings.")
+            .font(AppTheme.Typography.caption)
+            .foregroundStyle(AppTheme.Colors.secondaryText)
+        }
+      }
+      .navigationTitle("Update Price")
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .cancellationAction) {
+          Button("Cancel") {
+            showingUpdatePrice = false
+            newPricePerUnit = ""
+          }
+        }
+
+        ToolbarItem(placement: .confirmationAction) {
+          Button("Update") {
+            Task {
+              await updatePrice(investment)
+            }
+          }
+          .disabled(newPricePerUnit.isEmpty || Int(newPricePerUnit) == nil)
+        }
+      }
+    }
+  }
+
+  private func updatePrice(_ investment: InvestmentResponse) async {
+    guard let newPrice = Int(newPricePerUnit) else { return }
+
+    await viewModel.updatePricePerUnit(investment, newPrice: newPrice)
+    showingUpdatePrice = false
+    newPricePerUnit = ""
   }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Dependencies
 
 struct AppView: View {
   @Binding var selectedTab: AppTab
@@ -56,7 +57,7 @@ struct AppView: View {
   }
 }
 
-#Preview {
-  AppView(selectedTab: .constant(.dashboard))
-}
+//#Preview {
+//  AppView(selectedTab: .constant(.dashboard))
+//}
 

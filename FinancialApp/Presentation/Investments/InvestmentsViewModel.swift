@@ -134,7 +134,7 @@ final class InvestmentsViewModel {
 
     func updateInvestmentValue(_ investment: InvestmentResponse, newValue: Int) async {
         do {
-            try await investmentService.updateCurrentValue(investment.id, newValue)
+            try await investmentService.updateCurrentValue(investment.id, Double(newValue))
             if let index = investments.firstIndex(where: { $0.id == investment.id }) {
                 var updated = investment
                 investments[index] = InvestmentResponse(

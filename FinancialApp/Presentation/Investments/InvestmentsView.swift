@@ -12,7 +12,6 @@ struct InvestmentsView: View {
         if state.isEmpty {
           emptyStateView
         } else {
-          
           content
         }
       }
@@ -153,18 +152,12 @@ struct InvestmentsView: View {
   private var investmentsSection: some View {
     VStack(spacing: AppTheme.Spacing.sm) {
       ForEach(viewModel.filteredInvestments) { investment in
-//        NavigationLink(value: AppRouter.investmentDetail(id: investment.id)) {
-          InvestmentCard(investment: investment)
-          //          .onTapGesture {
-          //            appNavigation.push(.investmentDetail(id: investment.id))
-          //          }
-//        }
+        InvestmentCard(investment: investment) {
+          routerPath.navigate(to: .investmentDetail(id: investment.id))
+        }
       }
     }
     .padding(.horizontal)
-    .navigationDestination(for: String.self) { investmentId in
-      InvestmentDetailView(investmentId: investmentId)
-    }
   }
   
   // MARK: - Empty State View

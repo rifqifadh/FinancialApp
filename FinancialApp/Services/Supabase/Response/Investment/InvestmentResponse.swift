@@ -20,6 +20,7 @@ struct InvestmentResponse: Identifiable, Codable, Sendable, Equatable {
     let maturityDate: Date?
     let interestRate: Double?
     let units: Double?
+    let initialPricePerUnit: Double?
     let pricePerUnit: Int?
     let notes: String?
     let createdAt: Date?
@@ -38,6 +39,7 @@ struct InvestmentResponse: Identifiable, Codable, Sendable, Equatable {
         case maturityDate = "maturity_date"
         case interestRate = "interest_rate"
         case units
+        case initialPricePerUnit = "initial_price_per_unit"
         case pricePerUnit = "price_per_unit"
         case notes
         case createdAt = "created_at"
@@ -80,6 +82,12 @@ struct InvestmentResponse: Identifiable, Codable, Sendable, Equatable {
         type.icon
     }
 
+    // Computed property for Lot (units / 100)
+    var lot: Double? {
+        guard let units = units else { return nil }
+        return units / 100
+    }
+
     // Custom initializer for manual creation
     init(
         id: String,
@@ -94,6 +102,7 @@ struct InvestmentResponse: Identifiable, Codable, Sendable, Equatable {
         maturityDate: Date? = nil,
         interestRate: Double? = nil,
         units: Double? = nil,
+        initialPricePerUnit: Double? = nil,
         pricePerUnit: Int? = nil,
         notes: String? = nil,
         createdAt: Date? = nil,
@@ -111,6 +120,7 @@ struct InvestmentResponse: Identifiable, Codable, Sendable, Equatable {
         self.maturityDate = maturityDate
         self.interestRate = interestRate
         self.units = units
+        self.initialPricePerUnit = initialPricePerUnit
         self.pricePerUnit = pricePerUnit
         self.notes = notes
         self.createdAt = createdAt
@@ -211,6 +221,21 @@ extension InvestmentResponse {
         notes: "Deposito 6 bulan dengan bunga 5% per tahun"
     )
 
+    static let mockMaturedDeposito = InvestmentResponse(
+        id: "6",
+        userId: "user1",
+        name: "Deposito Mandiri 12 Bulan",
+        type: .deposito,
+        accountId: "acc1",
+        accountName: "Mandiri",
+        initialAmount: 50000000,
+        currentValue: 50000000, // Not yet updated
+        purchaseDate: Calendar.current.date(byAdding: .month, value: -12, to: Date())!,
+        maturityDate: Calendar.current.date(byAdding: .day, value: -5, to: Date())!, // Matured 5 days ago
+        interestRate: 4.5,
+        notes: "Deposito yang sudah jatuh tempo, perlu update nilai"
+    )
+
     static let mockStocks = InvestmentResponse(
         id: "2",
         userId: "user1",
@@ -221,8 +246,9 @@ extension InvestmentResponse {
         initialAmount: 5000000,
         currentValue: 6500000,
         purchaseDate: Calendar.current.date(byAdding: .month, value: -6, to: Date())!,
-        units: 500,
-        pricePerUnit: 10000,
+        units: 50000, // 500 lot
+        initialPricePerUnit: 10000,
+        pricePerUnit: 13000, // Current price
         notes: "Blue chip banking stock"
     )
 
@@ -236,8 +262,9 @@ extension InvestmentResponse {
         initialAmount: 3000000,
         currentValue: 3450000,
         purchaseDate: Calendar.current.date(byAdding: .month, value: -12, to: Date())!,
-        units: 2500,
-        pricePerUnit: 1200,
+        units: 250000, // 2500 lot
+        initialPricePerUnit: 1200,
+        pricePerUnit: 1380, // Current price
         notes: "Reksa dana saham dengan performa bagus"
     )
 
@@ -266,8 +293,9 @@ extension InvestmentResponse {
         initialAmount: 8000000,
         currentValue: 9200000,
         purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date())!,
-        units: 10,
-        pricePerUnit: 800000,
+        units: 1000, // 10 lot (gram)
+        initialPricePerUnit: 800000,
+        pricePerUnit: 920000, // Current price
         notes: "10 gram emas Antam"
     )
 
